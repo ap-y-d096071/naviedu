@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#138Bff" />
+  <title>나비 나침반 · Nabi Compass</title>
+  <meta name="description" content="나비 나침반 클래스 — AI 진로 탐색 온보딩. 드래그앤드롭, 카드 선택, 게이미피케이션으로 즐기는 진로 항해의 시작." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- App shell : phone frame -->
+  <div class="device" id="device">
+    <div class="device__notch" aria-hidden="true"></div>
+
+    <!-- Top bar : progress -->
+    <header class="topbar" id="topbar">
+      <button class="topbar__back" id="backBtn" aria-label="이전 단계로" hidden>‹</button>
+      <div class="progress" role="progressbar" aria-label="온보딩 진행률" aria-valuemin="1" aria-valuemax="9" aria-valuenow="1">
+        <div class="progress__track">
+          <div class="progress__fill" id="progressFill"></div>
+        </div>
+        <span class="progress__label" id="progressLabel">1 / 9</span>
+      </div>
+      <button class="topbar__skip" id="skipBtn">건너뛰기</button>
+    </header>
+
+    <!-- Screens get injected here -->
+    <main class="stage" id="stage" aria-live="polite"></main>
+
+    <!-- Confetti canvas -->
+    <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+  </div>
+
+  <p class="device-hint">데스크톱에서는 모바일 화면으로 미리보기됩니다 · 방향키 ← → 로 단계 이동</p>
+
+  <script src="app.js"></script>
+</body>
+</html>
