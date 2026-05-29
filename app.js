@@ -33,77 +33,100 @@
   /* ----------------------------------------------------------
      Butterfly SVG — the volumetric "Nabi" guide
   ---------------------------------------------------------- */
-  function nabi(size = 200, withFloat = true) {
+  /* Volumetric "Nabi" mascot — peach body, magenta+yellow wings, aubergine eyes.
+     pose: fly | wave | think | analyst | mentor | climb | celebrate            */
+  const LC = '#eeb588';     // limb / antenna peach
+  const EYE = '#3b2b49';    // aubergine eyes
+  function nabiWings(full) {
+    if (!full) {
+      return `
+      <g class="nabi-wing-l"><path d="M90 104 C 72 90 52 95 56 113 C 60 127 82 121 92 113 Z" fill="url(#nbW)"/><circle cx="67" cy="106" r="4.5" fill="url(#nbY)"/></g>
+      <g class="nabi-wing-r"><path d="M110 104 C 128 90 148 95 144 113 C 140 127 118 121 108 113 Z" fill="url(#nbW)"/><circle cx="133" cy="106" r="4.5" fill="url(#nbY)"/></g>`;
+    }
+    return `
+    <g class="nabi-wing-l" filter="url(#nbSoft)">
+      <path d="M94 98 C 58 50 12 54 12 94 C 12 124 58 124 96 104 Z" fill="url(#nbW)"/>
+      <path d="M96 110 C 62 122 24 148 38 178 C 50 202 92 162 96 128 Z" fill="url(#nbW)"/>
+      <path d="M68 86 C 50 66 30 72 32 92 C 34 108 56 104 70 96 Z" fill="url(#nbY)"/>
+      <circle cx="40" cy="100" r="7" fill="url(#nbY)"/>
+      <circle cx="52" cy="158" r="6" fill="url(#nbY)"/>
+    </g>
+    <g class="nabi-wing-r" filter="url(#nbSoft)">
+      <path d="M106 98 C 142 50 188 54 188 94 C 188 124 142 124 104 104 Z" fill="url(#nbW)"/>
+      <path d="M104 110 C 138 122 176 148 162 178 C 150 202 108 162 104 128 Z" fill="url(#nbW)"/>
+      <path d="M132 86 C 150 66 170 72 168 92 C 166 108 144 104 130 96 Z" fill="url(#nbY)"/>
+      <circle cx="160" cy="100" r="7" fill="url(#nbY)"/>
+      <circle cx="148" cy="158" r="6" fill="url(#nbY)"/>
+    </g>`;
+  }
+  function nabi(size = 200, pose = 'fly', withFloat = true) {
+    const full = !['think', 'analyst', 'mentor'].includes(pose);
+    const arm = (d, hx, hy) => `<path d="${d}" stroke="${LC}" stroke-width="13" fill="none" stroke-linecap="round"/><circle cx="${hx}" cy="${hy}" r="8.5" fill="${LC}"/>`;
+    let arms;
+    if (pose === 'wave')           arms = arm('M83 117 Q 72 130 66 143', 66, 143) + arm('M117 112 Q 134 95 145 77', 145, 77);
+    else if (pose === 'celebrate') arms = arm('M83 112 Q 67 92 59 72', 59, 72) + arm('M117 112 Q 133 92 141 72', 141, 72);
+    else if (pose === 'climb')     arms = arm('M85 110 Q 80 90 84 73', 84, 73) + arm('M115 110 Q 120 90 116 73', 116, 73);
+    else if (pose === 'analyst' || pose === 'mentor') arms = arm('M84 118 Q 80 131 87 141', 87, 141) + arm('M116 118 Q 120 131 113 141', 113, 141);
+    else if (pose === 'think')     arms = arm('M82 118 Q 70 132 64 145', 64, 145) + arm('M116 116 Q 110 126 101 121', 99, 118);
+    else                           arms = arm('M82 116 Q 70 128 64 142', 64, 142) + arm('M118 116 Q 130 128 136 142', 136, 142);
+
+    const eyeShift = pose === 'think' ? -2 : 0;
+    let mouth;
+    if (pose === 'celebrate') mouth = `<path d="M90 92 Q 100 107 110 92 Q 100 100 90 92 Z" fill="#7a2b46"/><path d="M90 92 Q 100 107 110 92" stroke="${EYE}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    else if (pose === 'think') mouth = `<path d="M95 96 Q 100 99 105 95" stroke="${EYE}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    else mouth = `<path d="M91 93 Q 100 102 109 93" stroke="${EYE}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
+
+    let accHead = '', accFront = '', behind = '';
+    if (pose === 'analyst') {
+      accFront = `
+      <g><circle cx="88" cy="${83+eyeShift}" r="11" fill="rgba(255,255,255,.18)" stroke="#c2185b" stroke-width="3"/><circle cx="112" cy="${83+eyeShift}" r="11" fill="rgba(255,255,255,.18)" stroke="#c2185b" stroke-width="3"/><path d="M99 83 H101" stroke="#c2185b" stroke-width="3"/></g>
+      <g transform="rotate(-9 100 138)"><rect x="83" y="124" width="34" height="25" rx="4" fill="#54657a"/><rect x="86" y="127" width="28" height="19" rx="2" fill="#cfe7ff"/><circle cx="100" cy="139" r="6" fill="none" stroke="#138Bff" stroke-width="2"/></g>`;
+    } else if (pose === 'mentor') {
+      accHead = `<g transform="rotate(-6 100 48)"><rect x="80" y="42" width="40" height="8" rx="2" fill="#9c124e"/><polygon points="100,31 126,42 100,50 74,42" fill="#b81259"/><circle cx="100" cy="41" r="3" fill="#f4d000"/><path d="M100 41 L 121 45 L 121 58" stroke="#f4d000" stroke-width="2" fill="none"/><circle cx="121" cy="60" r="3.2" fill="#f4d000"/></g>`;
+      accFront = `<g><rect x="82" y="127" width="36" height="22" rx="3" fill="#8a1f3c"/><rect x="99" y="127" width="2" height="22" fill="#fff" opacity=".5"/><rect x="86" y="131" width="11" height="3" rx="1.5" fill="#fff" opacity=".7"/><rect x="103" y="131" width="11" height="3" rx="1.5" fill="#fff" opacity=".7"/></g>`;
+    }
+
+    let conf = '';
+    if (pose === 'celebrate') {
+      const cs = ['#138Bff', '#f4d000', '#ff6db2', '#23b39c'];
+      for (let i = 0; i < 9; i++) { const x = (22 + Math.random()*156)|0, y = (8 + Math.random()*56)|0; conf += `<rect x="${x}" y="${y}" width="7" height="4" rx="1" fill="${cs[i%4]}" transform="rotate(${(Math.random()*90)|0} ${x} ${y})"/>`; }
+    }
+
     return `
     <div class="nabi-wrap">
-      <svg class="nabi ${withFloat ? 'nabi-float' : ''}" width="${size}" height="${size}" viewBox="0 0 200 200" role="img" aria-label="나비 가이드 캐릭터">
+      <svg class="nabi ${withFloat ? 'nabi-float' : ''}" width="${size}" height="${size}" viewBox="0 0 200 200" role="img" aria-label="나비 캐릭터">
         <defs>
-          <radialGradient id="wingG" cx="38%" cy="32%" r="78%">
-            <stop offset="0%" stop-color="#ffe3f0"/>
-            <stop offset="52%" stop-color="#ff8fc4"/>
-            <stop offset="100%" stop-color="#ff4f9e"/>
-          </radialGradient>
-          <radialGradient id="wingG2" cx="40%" cy="35%" r="80%">
-            <stop offset="0%" stop-color="#fff6c2"/>
-            <stop offset="55%" stop-color="#ffe35e"/>
-            <stop offset="100%" stop-color="#f4cf00"/>
-          </radialGradient>
-          <radialGradient id="bodyG" cx="40%" cy="28%" r="85%">
-            <stop offset="0%" stop-color="#fffae0"/>
-            <stop offset="58%" stop-color="#ffe35e"/>
-            <stop offset="100%" stop-color="#f4c700"/>
-          </radialGradient>
-          <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#ff9ecb"/><stop offset="100%" stop-color="#ff6db2"/>
-          </radialGradient>
-          <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#ff4f9e" flood-opacity="0.30"/>
-          </filter>
+          <radialGradient id="nbBody" cx="38%" cy="26%" r="84%"><stop offset="0%" stop-color="#ffe9d6"/><stop offset="55%" stop-color="#f6c39b"/><stop offset="100%" stop-color="#e3a06f"/></radialGradient>
+          <radialGradient id="nbW" cx="40%" cy="26%" r="90%"><stop offset="0%" stop-color="#ff86b4"/><stop offset="50%" stop-color="#e62e72"/><stop offset="100%" stop-color="#b3145a"/></radialGradient>
+          <radialGradient id="nbY" cx="40%" cy="32%" r="82%"><stop offset="0%" stop-color="#fff29c"/><stop offset="100%" stop-color="#f4d000"/></radialGradient>
+          <radialGradient id="nbCheek" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffa6c4"/><stop offset="100%" stop-color="#ff7fa8"/></radialGradient>
+          <filter id="nbSoft" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#c76a98" flood-opacity="0.26"/></filter>
         </defs>
-
-        <!-- Left wings (plump & rounded) -->
-        <g class="nabi-wing-l" filter="url(#soft)">
-          <path d="M98 112 C 52 58, 10 64, 12 102 C 14 136, 60 138, 98 118 Z" fill="url(#wingG)"/>
-          <path d="M98 120 C 62 128, 26 148, 36 180 C 46 208, 94 170, 98 134 Z" fill="url(#wingG2)"/>
-          <circle cx="46" cy="92" r="11" fill="#fff" opacity=".75"/>
-          <circle cx="40" cy="106" r="6" fill="#fff" opacity=".6"/>
-          <path d="M58 162 c -4 -7 -13 -7 -13 1 c 0 6 8 10 13 14 c 5 -4 13 -8 13 -14 c 0 -8 -9 -8 -13 -1 z" fill="#ff6db2"/>
-        </g>
-        <!-- Right wings -->
-        <g class="nabi-wing-r" filter="url(#soft)">
-          <path d="M102 112 C 148 58, 190 64, 188 102 C 186 136, 140 138, 102 118 Z" fill="url(#wingG)"/>
-          <path d="M102 120 C 138 128, 174 148, 164 180 C 154 208, 106 170, 102 134 Z" fill="url(#wingG2)"/>
-          <circle cx="154" cy="92" r="11" fill="#fff" opacity=".75"/>
-          <circle cx="160" cy="106" r="6" fill="#fff" opacity=".6"/>
-          <path d="M142 162 c -4 -7 -13 -7 -13 1 c 0 6 8 10 13 14 c 5 -4 13 -8 13 -14 c 0 -8 -9 -8 -13 -1 z" fill="#ff6db2"/>
-        </g>
-
-        <!-- Chubby body + big round head -->
-        <ellipse cx="100" cy="146" rx="15" ry="20" fill="url(#bodyG)" filter="url(#soft)"/>
-        <circle cx="100" cy="112" r="33" fill="url(#bodyG)" filter="url(#soft)"/>
-
-        <!-- Antennae with heart tips -->
-        <path d="M86 84 C 78 60, 66 54, 64 42" stroke="#f4c700" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M114 84 C 122 60, 134 54, 136 42" stroke="#f4c700" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M64 42 c -3 -5 -10 -5 -10 1 c 0 5 6 8 10 11 c 4 -3 10 -6 10 -11 c 0 -6 -7 -6 -10 -1 z" fill="#ff6db2"/>
-        <path d="M136 42 c -3 -5 -10 -5 -10 1 c 0 5 6 8 10 11 c 4 -3 10 -6 10 -11 c 0 -6 -7 -6 -10 -1 z" fill="#ff6db2"/>
-
-        <!-- Face : big sparkly eyes -->
-        <ellipse cx="88" cy="112" rx="8.5" ry="10.5" fill="#3a2230"/>
-        <ellipse cx="112" cy="112" rx="8.5" ry="10.5" fill="#3a2230"/>
-        <circle cx="91" cy="108" r="3.4" fill="#fff"/>
-        <circle cx="115" cy="108" r="3.4" fill="#fff"/>
-        <circle cx="85.5" cy="116" r="1.8" fill="#fff" opacity=".9"/>
-        <circle cx="109.5" cy="116" r="1.8" fill="#fff" opacity=".9"/>
-        <!-- Blush -->
-        <ellipse cx="76" cy="124" rx="8" ry="5.5" fill="url(#cheek)" opacity=".85"/>
-        <ellipse cx="124" cy="124" rx="8" ry="5.5" fill="url(#cheek)" opacity=".85"/>
-        <!-- Happy open smile -->
-        <path d="M92 126 Q 100 137 108 126 Q 100 132 92 126 Z" fill="#ff6db2"/>
-        <path d="M92 126 Q 100 137 108 126" stroke="#3a2230" stroke-width="3" fill="none" stroke-linecap="round"/>
+        ${behind}
+        ${nabiWings(full)}
+        <path d="M91 150 L 89 168" stroke="${LC}" stroke-width="15" fill="none" stroke-linecap="round"/>
+        <path d="M109 150 L 111 168" stroke="${LC}" stroke-width="15" fill="none" stroke-linecap="round"/>
+        <ellipse cx="100" cy="120" rx="25" ry="29" fill="url(#nbBody)" filter="url(#nbSoft)"/>
+        <circle cx="100" cy="82" r="30" fill="url(#nbBody)" filter="url(#nbSoft)"/>
+        ${arms}
+        <path d="M89 56 C 83 38 71 33 65 25" stroke="${LC}" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M111 56 C 117 38 129 33 135 25" stroke="${LC}" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <circle cx="64" cy="24" r="6.5" fill="url(#nbW)"/>
+        <circle cx="136" cy="24" r="6.5" fill="url(#nbW)"/>
+        <ellipse cx="88" cy="${83+eyeShift}" rx="7.5" ry="9.5" fill="${EYE}"/>
+        <ellipse cx="112" cy="${83+eyeShift}" rx="7.5" ry="9.5" fill="${EYE}"/>
+        <circle cx="90.5" cy="${80+eyeShift}" r="2.6" fill="#fff"/>
+        <circle cx="114.5" cy="${80+eyeShift}" r="2.6" fill="#fff"/>
+        <ellipse cx="75" cy="92" rx="7" ry="4.5" fill="url(#nbCheek)" opacity=".9"/>
+        <ellipse cx="125" cy="92" rx="7" ry="4.5" fill="url(#nbCheek)" opacity=".9"/>
+        ${mouth}
+        ${accHead}
+        ${accFront}
+        ${conf}
       </svg>
     </div>`;
   }
+  function partnerPose() { return ({ coach:'wave', analyst:'analyst', mentor:'mentor' })[state.partner] || 'analyst'; }
 
   function speech(html) {
     return `<p class="speech">${html}</p>`;
@@ -131,7 +154,7 @@
       render: () => `
         ${deco()}
         <div class="spacer"></div>
-        ${nabi(220)}
+        ${nabi(212,'wave')}
         <div style="text-align:center">
           <span class="eyebrow" style="align-self:center">🧭 AI 진로 탐색 항해</span>
           <h1 class="title">반가워요! 저는 <span class="hl">나비</span>예요 🦋<br/>함께 진로를 항해해 볼까요?</h1>
@@ -221,9 +244,9 @@
         <h2 class="title">어떤 <span class="hl">AI 파트너</span>와<br/>항해할까요?</h2>
         <p class="subtitle">학습 스타일에 맞는 동반자를 골라요.</p>
         <div class="card-list" id="partnerList">
-          ${roleCard('coach','🤗','다정한 코치','따뜻한 응원과 동기부여로 이끌어요')}
-          ${roleCard('analyst','📊','논리적 분석가','데이터와 근거로 길을 보여줘요')}
-          ${roleCard('mentor','🧭','든든한 멘토','경험에서 우러난 조언을 전해요')}
+          ${partnerCard('coach','wave','다정한 코치','따뜻한 응원과 동기부여로 이끌어요')}
+          ${partnerCard('analyst','analyst','논리적 분석가','데이터와 근거로 길을 보여줘요')}
+          ${partnerCard('mentor','mentor','든든한 멘토','경험에서 우러난 조언을 전해요')}
         </div>
         <div class="spacer"></div>
         <div class="cta-dock">
@@ -247,7 +270,7 @@
     {
       render: () => `
         <span class="eyebrow">STEP 5 · 첫 번째 질문</span>
-        ${nabi(120)}
+        ${nabi(118,'think')}
         ${speech('진로에 대해 가장 <b>궁금한 점</b>을<br/>편하게 적어주세요. 제가 길을 찾아볼게요!')}
         <textarea class="q-input" id="qInput" rows="3" placeholder="예) 데이터를 다루는 직업이 궁금해요. 어떤 진로가 있을까요?">${escapeHtml(state.question)}</textarea>
         <div class="q-suggest" id="qSuggest">
@@ -275,7 +298,7 @@
       render: () => `
         <span class="eyebrow">STEP 6 · AI 진로 탐색 카드</span>
         <div class="ai-head">
-          ${nabi(78)}
+          ${nabi(84, partnerPose())}
           ${speech(`${partnerLabel()}가 <b>공공데이터</b>로<br/>네 고민을 카드로 정리하고 있어!`)}
         </div>
         <div class="ai-loader" id="aiLoader">
@@ -333,7 +356,7 @@
         <div class="ladder">
           ${L.map((r, idx) => `
             <div class="rung ${idx === 0 ? 'reached' : ''}" data-i="${idx}">
-              <span class="rung__nabi">${idx === 0 ? '🦋' : ''}</span>
+              <span class="rung__nabi">${idx === 0 ? nabi(40, 'climb', false) : ''}</span>
               <div class="rung__body"><span class="rung__step">${r.step}</span><span class="rung__q">${r.q}</span></div>
             </div>`).reverse().join('')}
         </div>
@@ -349,11 +372,11 @@
         const climb = el.querySelector('#climbBtn');
         climb.addEventListener('click', () => {
           if (cur >= total - 1) return;
-          el.querySelector(`.rung[data-i="${cur}"] .rung__nabi`).textContent = '';
+          el.querySelector(`.rung[data-i="${cur}"] .rung__nabi`).innerHTML = '';
           cur++;
           const next = el.querySelector(`.rung[data-i="${cur}"]`);
           next.classList.add('reached');
-          next.querySelector('.rung__nabi').textContent = '🦋';
+          next.querySelector('.rung__nabi').innerHTML = nabi(40, 'climb', false);
           next.scrollIntoView({ block: 'center', behavior: 'smooth' });
           climb.textContent = `⬆️ 한 칸 오르기 (${cur + 1}/${total})`;
           if (cur >= total - 1) {
@@ -374,7 +397,7 @@
           <span class="eyebrow" style="align-self:center">🎉 마일스톤 달성</span>
           <div class="badge">
             <div class="badge__rays"></div>
-            <div class="badge__disc"><span class="badge__emoji">🦋</span></div>
+            <div class="badge__disc"><span class="badge__nabi">${nabi(150,'celebrate',false)}</span></div>
             <div class="badge__ribbon">첫 항해자 뱃지 · First Explorer</div>
           </div>
           <h2 class="title" style="margin-top:14px">온보딩 완료! 🎊<br/><span class="hl">첫 항해자</span> 뱃지를 획득했어요</h2>
@@ -528,6 +551,13 @@
   }
   function svcTile(key, emoji, label) {
     return `<button class="svc-tile" data-svc="${key}"><span class="svc-tile__ic">${emoji}</span><span class="svc-tile__l">${label}</span></button>`;
+  }
+  function partnerCard(value, pose, title, desc) {
+    return `<button class="opt-card" data-value="${value}">
+      <span class="opt-card__emoji opt-card__emoji--nabi">${nabi(54, pose)}</span>
+      <span class="opt-card__body"><h3>${title}</h3><p>${desc}</p></span>
+      <span class="opt-card__check">✓</span>
+    </button>`;
   }
   function lbRow(rank, medal, name, pts, me) {
     return `<div class="lb-row ${me?'me':''}">

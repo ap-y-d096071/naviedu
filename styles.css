@@ -264,6 +264,16 @@ body {
 }
 .opt-card.is-selected .opt-card__check { background: var(--blue); border-color: var(--blue); }
 
+/* Nabi mascot inside option cards (AI partner select) */
+.opt-card__emoji--nabi {
+  background: transparent !important;
+  border: none !important;
+  overflow: visible;
+  padding: 0;
+}
+.opt-card__emoji--nabi .nabi-wrap { width: 54px; height: 54px; }
+.opt-card__emoji--nabi .nabi { overflow: visible; }
+
 /* ---------- Feature rows (value screen) ---------- */
 .feature { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; }
 .feature + .feature { border-top: 1.5px dashed var(--gray); }
@@ -345,6 +355,8 @@ body {
   display: grid; place-items: center;
 }
 .badge__emoji { font-size: 76px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.18)); }
+.badge__nabi { display: grid; place-items: center; }
+.badge__nabi .nabi { overflow: visible; }
 .badge__ribbon {
   position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); z-index: 2;
   background: var(--pink); color: #fff; font-size: 12px; font-weight: 700;
@@ -477,7 +489,8 @@ body {
   transition: opacity .4s var(--ease), border-color .4s, transform .35s var(--ease), box-shadow .3s;
 }
 .rung.reached { opacity: 1; border-color: var(--blue); box-shadow: var(--shadow-sm); transform: scale(1.01); }
-.rung__nabi { font-size: 22px; width: 26px; flex: none; text-align: center; }
+.rung__nabi { width: 40px; height: 40px; flex: none; display: grid; place-items: center; }
+.rung__nabi .nabi { overflow: visible; }
 .rung__body { flex: 1; }
 .rung__step { font-size: 11px; font-weight: 700; color: var(--pink); display: block; }
 .rung__q { font-size: 12.8px; font-weight: 500; line-height: 1.45; color: var(--ink); }
