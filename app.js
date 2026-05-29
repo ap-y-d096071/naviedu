@@ -178,10 +178,10 @@
         <span class="eyebrow">STEP 2 · 이렇게 도와드려요</span>
         <h2 class="title">나비와 함께라면<br/>진로 탐색이 <span class="hl-pink">게임처럼</span> 즐거워요</h2>
         <div style="margin-top:14px">
-          ${feature('🃏','진로 카드 던지기','관심사를 드래그해 담으면 AI가 맞춤 카드를 발급해요.')}
-          ${feature('🪜','사다리 오르기','단계를 오를수록 나에게 꼭 맞는 진로가 또렷해져요.')}
-          ${feature('🤖','AI 파트너','코치·분석가·멘토 중 내 스타일의 파트너를 골라요.')}
-          ${feature('🏅','성취 뱃지','마일스톤을 달성하면 축하와 뱃지로 보상받아요.')}
+          ${feature('🃏','AI 진로 탐색 카드','질문 1개로 관련 학과·직업·오늘의 행동까지 한 장에 정리해요.')}
+          ${feature('🪜','질문 사다리 프로젝트','막연한 고민을 탐구 가능한 프로젝트 주제로 키워요.')}
+          ${feature('🦋','나비 궤적 포트폴리오','질문·근거·성찰의 성장 과정을 차곡차곡 기록해요.')}
+          ${feature('🏫','학교·지역 데이터','공공데이터로 진로를 학교 활동·지역 자원과 연결해요.')}
         </div>
         <div class="nabi-wrap" style="margin-top:6px">${nabi(120)}</div>
         <div class="spacer"></div>
@@ -270,7 +270,103 @@
       }
     },
 
-    /* 7 — Milestone celebration (badge) --------------------------- */
+    /* 7 — AI 진로 탐색 카드 (AI 답변 생성 시뮬레이션) ------------------ */
+    {
+      render: () => `
+        <span class="eyebrow">STEP 6 · AI 진로 탐색 카드</span>
+        <div class="ai-head">
+          ${nabi(78)}
+          ${speech(`${partnerLabel()}가 <b>공공데이터</b>로<br/>네 고민을 카드로 정리하고 있어!`)}
+        </div>
+        <div class="ai-loader" id="aiLoader">
+          <div class="ai-step"><i>🔑</i><span>질문에서 관심 키워드 추출</span><em>⏳</em></div>
+          <div class="ai-step"><i>🏷️</i><span>진로 불안 유형 분류</span><em>⏳</em></div>
+          <div class="ai-step"><i>📚</i><span>공공데이터 근거 검색 (RAG)</span><em>⏳</em></div>
+          <div class="ai-step"><i>🧮</i><span>트렌드 면역 점수 계산</span><em>⏳</em></div>
+          <div class="ai-step"><i>🃏</i><span>AI 진로 탐색 카드 생성</span><em>⏳</em></div>
+        </div>
+        <div class="ai-result" id="aiResult" hidden>
+          ${careerCardHtml()}
+        </div>
+        <div class="spacer"></div>
+        <div class="cta-dock" id="aiDock" hidden>
+          <button class="btn btn--primary" data-next>🪜 이 고민으로 프로젝트 시작하기</button>
+        </div>`,
+      mount(el) {
+        const steps = [...el.querySelectorAll('.ai-step')];
+        let i = 0;
+        const finish = () => {
+          if (!el.isConnected) return;
+          const loader = el.querySelector('#aiLoader');
+          loader.classList.add('fade');
+          setTimeout(() => {
+            if (!el.isConnected) return;
+            loader.hidden = true;
+            const r = el.querySelector('#aiResult');
+            r.hidden = false; r.classList.add('reveal');
+            el.querySelector('#aiDock').hidden = false;
+            r.querySelectorAll('.imm__fl').forEach(f => f.style.width = f.dataset.pct + '%');
+          }, 380);
+        };
+        const step = () => {
+          if (!el.isConnected) return;
+          if (i > 0) {
+            const p = steps[i - 1];
+            p.classList.remove('active'); p.classList.add('done');
+            p.querySelector('em').textContent = '✓';
+          }
+          if (i < steps.length) { steps[i].classList.add('active'); i++; setTimeout(step, 560); }
+          else finish();
+        };
+        setTimeout(step, 420);
+      }
+    },
+
+    /* 8 — 질문 사다리 프로젝트 보드 (사다리 오르기 게이미피케이션) --------- */
+    {
+      render: () => {
+        const L = questionLadder();
+        return `
+        <span class="eyebrow">STEP 7 · 질문 사다리 🪜</span>
+        <h2 class="title">막연한 질문을<br/><span class="hl">탐구 프로젝트</span>로 키워요</h2>
+        <p class="subtitle">한 칸씩 오르며 질문이 깊어져요. 나비를 정상까지 올려보세요!</p>
+        <div class="ladder">
+          ${L.map((r, idx) => `
+            <div class="rung ${idx === 0 ? 'reached' : ''}" data-i="${idx}">
+              <span class="rung__nabi">${idx === 0 ? '🦋' : ''}</span>
+              <div class="rung__body"><span class="rung__step">${r.step}</span><span class="rung__q">${r.q}</span></div>
+            </div>`).reverse().join('')}
+        </div>
+        <div class="spacer"></div>
+        <div class="cta-dock">
+          <button class="btn btn--primary" id="climbBtn">⬆️ 한 칸 오르기 (1/5)</button>
+          <button class="btn btn--primary" data-next id="ladderNext" hidden>🎉 프로젝트 주제 완성! 다음</button>
+        </div>`;
+      },
+      mount(el) {
+        const total = questionLadder().length;
+        let cur = 0;
+        const climb = el.querySelector('#climbBtn');
+        climb.addEventListener('click', () => {
+          if (cur >= total - 1) return;
+          el.querySelector(`.rung[data-i="${cur}"] .rung__nabi`).textContent = '';
+          cur++;
+          const next = el.querySelector(`.rung[data-i="${cur}"]`);
+          next.classList.add('reached');
+          next.querySelector('.rung__nabi').textContent = '🦋';
+          next.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          climb.textContent = `⬆️ 한 칸 오르기 (${cur + 1}/${total})`;
+          if (cur >= total - 1) {
+            climb.hidden = true;
+            el.querySelector('#ladderNext').hidden = false;
+            state.points += 10; save();
+            fireConfetti();
+          }
+        });
+      }
+    },
+
+    /* 9 — Milestone celebration (badge) --------------------------- */
     {
       render: () => `
         ${deco()}
@@ -282,11 +378,11 @@
             <div class="badge__ribbon">첫 항해자 뱃지 · First Explorer</div>
           </div>
           <h2 class="title" style="margin-top:14px">온보딩 완료! 🎊<br/><span class="hl">첫 항해자</span> 뱃지를 획득했어요</h2>
-          <p class="subtitle">${state.role ? roleLabel(state.role)+'으로서 ' : ''}진로 항해의 첫 발을 내디뎠어요.<br/>이제 나비가 만든 AI 진로 카드를 확인해볼까요?</p>
+          <p class="subtitle">${state.role ? roleLabel(state.role)+'으로서 ' : ''}첫 AI 진로 카드와 프로젝트 주제까지 완성했어요!<br/>이제 공공데이터 가이드로 나의 항해를 시작해요.</p>
         </div>
         <div class="spacer"></div>
         <div class="cta-dock">
-          <button class="btn btn--primary" data-next>🃏 내 AI 진로 카드 보기</button>
+          <button class="btn btn--primary" data-next>📊 공공데이터 가이드 보기</button>
         </div>`,
       mount() { fireConfetti(); }
     },
@@ -296,9 +392,9 @@
       render: () => {
         const recs = buildRecommendations();
         return `
-        <span class="eyebrow">STEP 6 · AI 진로 가이드</span>
-        <h2 class="title">나비가 분석한<br/><span class="hl">맞춤 진로 추천</span> 🧭</h2>
-        <p class="subtitle">${state.interests.length ? '“'+state.interests.slice(0,3).join(', ')+'”' : '선택한 관심사'} 기반 적합도 미리보기</p>
+        <span class="eyebrow">STEP 8 · 학교·지역 데이터 가이드</span>
+        <h2 class="title">공공데이터로 분석한<br/><span class="hl">맞춤 진로 적합도</span> 🧭</h2>
+        <p class="subtitle">${state.interests.length ? '“'+state.interests.slice(0,3).join(', ')+'”' : '선택한 관심사'} · 대학알리미·워크넷 학과/직업 데이터 기반</p>
         <div class="preview-card">
           <div class="preview-card__head">
             <div class="preview-card__avatar">${partnerEmoji()}</div>
@@ -308,7 +404,7 @@
             </div>
           </div>
           ${recs.map(r => barRow(r.label, r.pct, r.color)).join('')}
-          <div class="insight">💡 <b>${recs[0].label}</b> 적합도가 가장 높아요! 전체 가이드에서 추천 학과·로드맵·롤모델까지 확인할 수 있어요.</div>
+          <div class="insight">💡 <b>${recs[0].label}</b> 적합도가 가장 높아요! 교육청 대시보드에서는 이 데이터가 지역별 진로교육 수요로 모여요. <span style="color:var(--ink-soft)">출처 · 대학알리미, 워크넷 (공공데이터포털)</span></div>
         </div>
         <div class="spacer"></div>
         <div class="cta-dock">
@@ -343,9 +439,21 @@
           </div>
 
           <div class="hub-card hub-card--wide">
+            <div class="hub-card__k" style="margin-bottom:10px">🧭 나비 나침반 전체 기능 <small style="font-weight:400;color:var(--ink-soft)">· 탭하면 열려요</small></div>
+            <div class="svc-grid">
+              ${svcTile('card','🃏','AI 진로 탐색 카드')}
+              ${svcTile('ladder','🪜','질문 사다리 보드')}
+              ${svcTile('portfolio','🦋','나비 궤적 포트폴리오')}
+              ${svcTile('immunity','🛡️','트렌드 면역 점수')}
+              ${svcTile(roleSvc().key, roleSvc().emoji, roleSvc().label)}
+              ${svcTile('log','🔍','AI 사용 투명성 로그')}
+            </div>
+          </div>
+
+          <div class="hub-card hub-card--wide">
             <div class="hub-card__k" style="margin-bottom:8px">🎯 오늘의 챌린지</div>
-            ${challenge('🃏','진로 카드 1장 더 뽑기','+20P', false)}
-            ${challenge('📝','오늘의 진로 질문 답하기','+15P', false)}
+            ${challenge('🃏','진로 카드 1장 더 뽑기','+20P', false, 'card')}
+            ${challenge('📝','질문 사다리로 프로젝트 만들기','+15P', false, 'ladder')}
             ${challenge('✅','온보딩 완료','달성!', true)}
           </div>
 
@@ -377,7 +485,9 @@
           Object.assign(state, { role:null, interests:[], partner:null, question:'', completed:false });
           save(); index = 0; render(-1);
         });
-        if (!state.completed) { state.completed = true; state.points += 0; save(); }
+        el.querySelectorAll('[data-svc]').forEach(t =>
+          t.addEventListener('click', () => { const c = svcContent(t.dataset.svc); if (c) openModal(c.title, c.html); }));
+        if (!state.completed) { state.completed = true; save(); }
       }
     },
   ];
@@ -411,10 +521,13 @@
       <span class="bar-row__pct">${pct}%</span>
     </div>`;
   }
-  function challenge(ic, h, tag, done) {
-    return `<div class="challenge"><div class="challenge__ic">${ic}</div>
+  function challenge(ic, h, tag, done, svc) {
+    return `<div class="challenge"${svc?` data-svc="${svc}"`:''} ${svc?'style="cursor:pointer"':''}><div class="challenge__ic">${ic}</div>
       <div class="challenge__b"><h5>${h}</h5><p>${done?'완료한 챌린지':'완료하고 포인트 받기'}</p></div>
       <button class="challenge__go ${done?'done':''}">${tag}</button></div>`;
+  }
+  function svcTile(key, emoji, label) {
+    return `<button class="svc-tile" data-svc="${key}"><span class="svc-tile__ic">${emoji}</span><span class="svc-tile__l">${label}</span></button>`;
   }
   function lbRow(rank, medal, name, pts, me) {
     return `<div class="lb-row ${me?'me':''}">
@@ -517,6 +630,243 @@
   function partnerEmoji(){ return ({coach:'🤗',analyst:'📊',mentor:'🧭'})[state.partner] || '🦋'; }
   function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function truncate(s,n){ return s.length>n ? s.slice(0,n)+'…' : s; }
+
+  /* ============================================================
+     AI 진로 탐색 카드 — 지식 베이스 & 시뮬레이션 생성기
+     (실제 AI 호출 없이, 기획 문서 구조를 따른 규칙 기반 생성)
+  ============================================================ */
+  const DOMAINS = {
+    design: { topic:'디자인·콘텐츠', emoji:'🎨',
+      majors:['시각디자인학과','산업디자인학과','UX·서비스디자인학과'],
+      jobs:['UX 디자이너','브랜드 경험 디자이너','콘텐츠 서비스 기획자'],
+      skills:['문제정의','사용자 공감','기획력','시각적 의사소통'],
+      activity:'디자인 동아리에서 우리 학교 앱·포스터를 다시 디자인하고, 친구 3명을 인터뷰해 탐구보고서로 정리해 보세요.',
+      actions:['관심 서비스 1개의 화면을 캡처해 "불편한 점 3가지" 적어보기','AI 이미지 도구로 같은 주제를 만들어 보고 한계 찾기','내 결과물에 "왜 이렇게 디자인했는지" 한 문단 쓰기'],
+      immunity:{auto:68, scale:86, comp:90}, kw:['디자인','그림','예술','미술','드로잉','ux','ui','브랜드','콘텐츠','패션'] },
+    ai: { topic:'AI·데이터', emoji:'🤖',
+      majors:['인공지능학과','데이터사이언스학과','컴퓨터공학과'],
+      jobs:['AI 엔지니어','데이터 분석가','MLOps 개발자'],
+      skills:['데이터 해석','문제정의','논리적 사고','협업'],
+      activity:'공공데이터포털에서 관심 주제 데이터를 받아 파이썬으로 그래프를 만들고, 발견한 인사이트를 발표해 보세요.',
+      actions:['공공데이터포털에서 관심 주제 데이터셋 1개 찾아보기','오늘 배운 개념을 AI에게 질문하고 내 말로 다시 정리하기','간단한 표 1개를 만들어 패턴 1가지 찾기'],
+      immunity:{auto:38, scale:95, comp:92}, kw:['ai','인공지능','데이터','코딩','개발','프로그래밍','it','로봇','머신','소프트웨어','컴퓨터'] },
+    bio: { topic:'의료·바이오', emoji:'🧬',
+      majors:['생명공학과','간호학과','보건의료·바이오학과'],
+      jobs:['바이오 연구원','보건의료 데이터 분석가','임상시험 코디네이터'],
+      skills:['탐구 설계','데이터 해석','윤리적 판단','꼼꼼함'],
+      activity:'과학 탐구 동아리에서 관심 건강 주제로 가설을 세우고 간단한 자료조사 보고서를 써보세요.',
+      actions:['관심 의료·바이오 뉴스 1개 읽고 핵심 3줄 요약','"이 기술의 이점/위험" 비교 표 만들기','관련 학과 커리큘럼 1개 찾아보기'],
+      immunity:{auto:45, scale:82, comp:88}, kw:['의료','바이오','생명','간호','의사','약','건강','생물','병원'] },
+    game: { topic:'게임·미디어', emoji:'🎮',
+      majors:['게임공학과','영상·미디어학과','콘텐츠학과'],
+      jobs:['게임 기획자','콘텐츠 PD','인터랙티브 미디어 디자이너'],
+      skills:['스토리 기획','사용자 경험','협업','기획력'],
+      activity:'팀을 만들어 간단한 게임·영상 기획안을 쓰고, 종이 프로토타입으로 친구들에게 테스트해 보세요.',
+      actions:['좋아하는 콘텐츠가 "왜 재미있는지" 3가지 분석','5분짜리 기획 아이디어 한 장으로 정리','AI로 초안 만들고 내가 바꾼 부분 표시하기'],
+      immunity:{auto:55, scale:90, comp:85}, kw:['게임','영상','미디어','콘텐츠','웹툰','애니','유튜브','방송'] },
+    biz: { topic:'경제·경영', emoji:'📈',
+      majors:['경영학과','경제학과','데이터경영·마케팅학과'],
+      jobs:['데이터 애널리스트','마케팅 기획자','창업가'],
+      skills:['데이터 해석','문제정의','설득력','기획력'],
+      activity:'학교 축제·동아리 운영을 "작은 창업"처럼 기획하고, 결과를 수치로 정리해 발표해 보세요.',
+      actions:['관심 브랜드가 "어떻게 돈을 버는지" 설명해보기','용돈·시간 사용을 1주일 기록해 패턴 찾기','관심 분야 시장 뉴스 1개 요약'],
+      immunity:{auto:50, scale:88, comp:84}, kw:['경제','경영','창업','마케팅','비즈니스','주식','회사','경영자','사업'] },
+    edu: { topic:'교육·인문', emoji:'📚',
+      majors:['교육학과','심리학과','국어국문·언어학과'],
+      jobs:['교사·에듀테크 기획자','상담사','콘텐츠 작가'],
+      skills:['공감','설명력','문제정의','글쓰기'],
+      activity:'친구에게 어려운 개념을 쉽게 설명하는 "5분 미니 수업"을 만들고 피드백을 받아보세요.',
+      actions:['내가 잘 아는 것을 한 문단으로 쉽게 설명해보기','관심 사회문제 1개에 대한 내 생각 3줄 쓰기','관련 직업인 인터뷰·영상 1개 찾아보기'],
+      immunity:{auto:48, scale:80, comp:86}, kw:['교육','인문','심리','상담','선생','교사','글쓰기','언어','역사','사회','문학'] },
+    env: { topic:'환경·지구', emoji:'🌍',
+      majors:['환경공학과','지구환경과학과','에너지공학과'],
+      jobs:['환경 컨설턴트','기후·에너지 데이터 분석가','ESG 기획자'],
+      skills:['데이터 해석','문제정의','시스템 사고','협업'],
+      activity:'우리 학교·동네의 환경 문제 1개를 정해 데이터로 측정하고 개선 캠페인을 기획해 보세요.',
+      actions:['관심 환경 이슈의 원인-결과 정리','우리 학교에서 줄일 수 있는 자원 1가지 찾기','관련 공공데이터·뉴스 1개 요약'],
+      immunity:{auto:42, scale:84, comp:87}, kw:['환경','지구','기후','에너지','생태','탄소','esg','지속가능'] },
+  };
+  const DEFAULT_DOMAIN = { topic:'미래 융합 진로', emoji:'🧭',
+    majors:['자유전공·융합학부','데이터·인문 융합과정','관심 분야 연계 학과'],
+    jobs:['융합형 기획자','문제 해결 전문가','데이터 기반 의사결정가'],
+    skills:['문제정의','데이터 해석','기획력','의사소통'],
+    activity:'관심 주제 1개를 정해 "질문 → 자료조사 → 작은 결과물"로 이어지는 미니 프로젝트를 만들어 보세요.',
+    actions:['지금 가장 궁금한 진로 질문 1개를 구체적으로 적기','관련 학과·직업 1개씩 찾아보기','오늘 10분 동안 할 수 있는 작은 탐구 실천하기'],
+    immunity:{auto:50, scale:85, comp:86} };
+  const INTEREST_DOMAIN = {
+    '예술·디자인':'design','코딩·IT':'ai','AI·로봇':'ai','과학·실험':'bio','의료·바이오':'bio',
+    '게임·콘텐츠':'game','영상·미디어':'game','경제·경영':'biz','교육·인문':'edu','환경·지구':'env','법·정치':'edu','요리·푸드':'biz',
+  };
+
+  function resolveDomain() {
+    const q = (state.question || '').toLowerCase();
+    for (const d of Object.values(DOMAINS)) if (d.kw.some(k => q.includes(k))) return d;
+    for (const it of state.interests) { const key = INTEREST_DOMAIN[it]; if (DOMAINS[key]) return DOMAINS[key]; }
+    return DEFAULT_DOMAIN;
+  }
+  function detectAnxiety() {
+    const q = state.question || '';
+    const ql = q.toLowerCase();
+    if (/(대체|없어|사라|뺏|위협|줄어|불필요)/.test(q) && /(ai|인공지능|자동|로봇)/.test(ql))
+      return ['기술 변화 불안', '빠른 AI·산업 변화 속에서 "지금 배우는 게 의미 있을까" 하는 마음'];
+    if (/(성적|등급|점수|내신|수능|모의고사)/.test(q))
+      return ['성적 불안', '성적만을 기준으로 진로를 좁히게 될까 하는 마음'];
+    if (/(학과|전공|진학|대학|계열)/.test(q))
+      return ['학과 선택 불안', '어떤 학과·계열이 나에게 맞을지 확신이 서지 않는 마음'];
+    if (/(자격증|스펙|취업|취직|먹고살|돈벌)/.test(q))
+      return ['취업·자격 불안', '"이걸로 먹고살 수 있을까" 하는 현실적인 마음'];
+    return ['진로 방향 불안', '정보는 많은데 무엇을 기준으로 선택할지 모르겠는 마음'];
+  }
+  function careerData() {
+    const d = resolveDomain();
+    const [atype, adesc] = detectAnxiety();
+    const q = state.question || `${d.topic} 분야가 궁금해요`;
+    const summary = `“${truncate(q, 38)}” — ${d.topic} 분야에서 무엇을 기준으로 준비할지 고민하고 있어요.`;
+    return { d, atype, adesc, q, summary };
+  }
+  function immBar(label, pct) {
+    return `<div class="imm"><span class="imm__l">${label}</span><span class="imm__tr"><span class="imm__fl" data-pct="${pct}"></span></span><b>${pct}</b></div>`;
+  }
+  function careerCardHtml() {
+    const { d, atype, adesc, summary } = careerData();
+    const chip = (t, cls='') => `<span class="ai-chip ${cls}">${t}</span>`;
+    const im = d.immunity;
+    return `
+    <div class="ai-card">
+      <div class="ai-card__top"><span class="ai-card__badge">🃏 AI 진로 탐색 카드</span><span class="ai-card__tag">공공데이터 기반</span></div>
+      <div class="ai-field"><h5>💭 고민 요약</h5><p>${summary}</p></div>
+      <div class="ai-field"><h5>🏷️ 불안 유형</h5><p><b style="color:var(--blue)">${atype}</b> · ${adesc}</p></div>
+      <div class="ai-2col">
+        <div class="ai-field"><h5>🎓 관련 학과</h5><div class="ai-chips">${d.majors.map(m=>chip(m)).join('')}</div></div>
+        <div class="ai-field"><h5>💼 관련 직업</h5><div class="ai-chips">${d.jobs.map(j=>chip(j,'pink')).join('')}</div></div>
+      </div>
+      <div class="ai-field"><h5>🌟 마스터리 역량</h5><div class="ai-chips">${d.skills.map(s=>chip(s,'yellow')).join('')}</div></div>
+      <div class="ai-field"><h5>🛡️ 트렌드 면역 점수 <small>높을수록 AI 시대에 강해요</small></h5>
+        ${immBar('자동화 안정성', 100 - im.auto)}${immBar('확장 가능성', im.scale)}${immBar('역량 성장성', im.comp)}
+      </div>
+      <div class="ai-field"><h5>🏫 학교에서 할 활동</h5><p>${d.activity}</p></div>
+      <div class="ai-field"><h5>✅ 오늘의 행동 3가지</h5><ul class="ai-todo">${d.actions.map(a=>`<li>${a}</li>`).join('')}</ul></div>
+      <div class="ai-src">📚 출처 · 대학알리미 학과정보, 워크넷 직업분류·전망, KNOW 재직자조사, 학교알리미 상담·특색사업 <span>(공공데이터포털)</span></div>
+    </div>`;
+  }
+  function questionLadder() {
+    const t = resolveDomain().topic;
+    return [
+      { step:'1단계 · 사실 질문',  q:`AI는 ${t} 분야의 일을 정말 대체할까?` },
+      { step:'2단계 · 비교 질문',  q:`${t}에서 AI가 대체하기 쉬운 일과 어려운 일은 무엇일까?` },
+      { step:'3단계 · 원인 질문',  q:`왜 ${t}의 문제정의·기획은 자동화되기 어려울까?` },
+      { step:'4단계 · 비판 질문',  q:`"AI를 잘 쓰는 사람이 곧 좋은 ${t} 전문가"라는 말은 맞을까?` },
+      { step:'5단계 · 프로젝트 질문', q:`고등학생이 AI 시대 ${t} 역량을 증명하려면 어떤 프로젝트를 만들 수 있을까?` },
+    ];
+  }
+
+  /* ============================================================
+     서비스 상세 (모달) — 기획 문서의 메인/서브 서비스 구현
+  ============================================================ */
+  function roleSvc() {
+    if (state.role === 'teacher') return { key:'teacher', emoji:'🧑‍🏫', label:'교사용 상담 요약 카드' };
+    if (state.role === 'parent')  return { key:'parent',  emoji:'👨‍👩‍👧', label:'학부모 설명 카드' };
+    return { key:'recovery', emoji:'🌱', label:'학습 회복 체크인' };
+  }
+  function kvTable(rows) {
+    return `<table class="kv">${rows.map(([k,v]) =>
+      `<tr><th>${k}</th><td>${v}</td></tr>`).join('')}</table>`;
+  }
+  function modalNote(html){ return `<p class="modal-note">${html}</p>`; }
+
+  function svcContent(key) {
+    const { d, atype, summary } = careerData();
+    switch (key) {
+      case 'card':
+        return { title:'🃏 AI 진로 탐색 카드', html: careerCardHtml() };
+      case 'ladder': {
+        const L = questionLadder();
+        const mastery = ['문제 발견','질문 생성','자료 조사','가설 설정','분석·제작','발표','피드백','회고','포트폴리오 저장'];
+        return { title:'🪜 질문 사다리 프로젝트 보드', html:
+          `<div class="ladder ladder--static">${L.map((r,i)=>`<div class="rung reached" data-i="${i}"><div class="rung__body"><span class="rung__step">${r.step}</span><span class="rung__q">${r.q}</span></div></div>`).reverse().join('')}</div>
+           ${modalNote('막연한 질문을 탐구 가능한 <b>프로젝트 주제</b>로 키워요. 이후 마스터리 역량을 단계별로 기록해요.')}
+           <div class="mastery">${mastery.map(m=>`<span>${m}</span>`).join('<i>→</i>')}</div>` };
+      }
+      case 'portfolio': {
+        const rows = [
+          ['🌱 나의 첫 질문', state.question ? `“${escapeHtml(state.question)}”` : '아직 기록된 질문이 없어요'],
+          ['🪜 질문 변화 과정', `사실 → 비교 → 원인 → 비판 → 프로젝트 질문 (${d.topic})`],
+          ['📚 탐구 근거', '대학알리미·워크넷·KNOW 등 공공데이터 카드 1건'],
+          ['🎯 프로젝트 결과물', `${d.topic} 미니 프로젝트 (기획 단계)`],
+          ['💬 피드백', 'AI·교사·동료 피드백 기록'],
+          ['🪞 성장 성찰', '내가 직접 판단한 부분과 다음 목표'],
+          ['🔍 AI 사용 로그', '사용 목적·수정 여부·출처 확인 자동 기록'],
+        ];
+        return { title:'🦋 나비 궤적 포트폴리오', html:
+          kvTable(rows) + modalNote('결과물이 아니라 <b>질문·근거·실패·수정·성찰의 과정</b>을 기록하는 과정 중심 포트폴리오예요.') };
+      }
+      case 'immunity': {
+        const im = d.immunity;
+        return { title:'🛡️ 트렌드 면역 점수', html:
+          `<p class="modal-lead"><b>${d.jobs[0]}</b> 기준 · AI 자동화 시대에 얼마나 강한 진로인지 점수화해요.</p>
+           <div class="imm-box">${immBar('자동화 안정성', 100-im.auto)}${immBar('확장 가능성', im.scale)}${immBar('역량 성장성', im.comp)}</div>
+           ${modalNote('워크넷 직업전망·KNOW 재직자조사 기반의 <b>설명 가능한 점수</b>로, 진로 불안을 구체적인 준비 방향으로 바꿔줘요.')}` };
+      }
+      case 'teacher':
+        return { title:'🧑‍🏫 교사용 상담 요약 카드', html:
+          kvTable([
+            ['학생 고민 요약', summary],
+            ['불안 유형', `<b>${atype}</b>`],
+            ['추천 상담 질문', '“그 고민을 느낀 구체적인 순간이 있었니?”'],
+            ['지도 포인트', '진로·학습·정서 코칭 방향 제시'],
+            ['관련 활동', '학교 특색사업·동아리·탐구활동 연결'],
+            ['교사 승인', 'AI 결과를 교사가 수정·승인'],
+          ]) + modalNote('교사를 대체하지 않고, <b>상담 준비 시간을 줄이고</b> 학생을 더 깊이 이해하도록 돕는 AI예요.') };
+      case 'parent':
+        return { title:'👨‍👩‍👧 학부모 설명 카드', html:
+          kvTable([
+            ['자녀 관심 분야', d.topic],
+            ['쉬운 설명', '단순 제작보다 문제 발견·기획력이 중요해지고 있어요'],
+            ['가정에서 도울 점', '결과보다 <b>과정</b>에 대해 질문해 주세요'],
+            ['피해야 할 말', '“그거 해서 뭐 먹고살래?”'],
+            ['추천 대화', '“그 일을 하려면 무엇부터 해보고 싶어?”'],
+          ]) + modalNote('자녀의 관심 분야를 <b>쉬운 언어</b>로 이해하도록 돕는 가정용 가이드예요.') };
+      case 'recovery':
+        return { title:'🌱 학습 회복 체크인', html:
+          kvTable([
+            ['발표 실패', '다음에는 무엇을 바꿀 수 있을까?'],
+            ['팀 갈등', '상대 입장에서 어려웠던 점은 무엇일까?'],
+            ['성적 불안', '지금 통제 가능한 행동은 무엇일까?'],
+            ['AI 의존', '이번 과제에서 내가 직접 판단한 부분은 어디일까?'],
+            ['무기력', '오늘 10분 안에 할 수 있는 가장 작은 행동은?'],
+          ]) + modalNote('심리 진단이 아니라 <b>학습 회복 지원</b>이에요. 위험 신호가 감지되면 교사·상담교사·전문기관 연계로 전환해요.') };
+      case 'log':
+        return { title:'🔍 AI 사용 투명성 로그', html:
+          kvTable([
+            ['사용한 AI', 'ChatGPT, Gemini, NotebookLM'],
+            ['사용 목적', '자료 요약, 질문 생성, 글 피드백'],
+            ['그대로 사용?', '아니오 — 내가 수정함'],
+            ['출처 확인?', '확인함'],
+            ['개인정보 입력?', '입력하지 않음'],
+            ['내가 판단한 부분', '결론과 사례는 직접 작성'],
+            ['교사 확인', '승인 / 보완 필요'],
+          ]) + modalNote('AI를 금지하지 않고 <b>책임 있게 썼는지 기록</b>해요. AI 윤리교육·수행평가 공정성에 대응해요.') };
+    }
+    return null;
+  }
+
+  /* 모달 ------------------------------------------------------- */
+  function openModal(title, html) {
+    const wrap = document.createElement('div');
+    wrap.className = 'modal';
+    wrap.innerHTML =
+      `<div class="modal__sheet" role="dialog" aria-label="${title}">
+        <div class="modal__bar"><h3>${title}</h3><button class="modal__x" aria-label="닫기">✕</button></div>
+        <div class="modal__body">${html}</div>
+      </div>`;
+    document.getElementById('device').appendChild(wrap);
+    void wrap.offsetHeight; // force reflow so the closed state is committed before transitioning
+    wrap.classList.add('open');
+    setTimeout(() => wrap.querySelectorAll('.imm__fl').forEach(f => f.style.width = f.dataset.pct + '%'), 60);
+    const close = () => { wrap.classList.remove('open'); setTimeout(() => wrap.remove(), 260); };
+    wrap.querySelector('.modal__x').addEventListener('click', close);
+    wrap.addEventListener('click', e => { if (e.target === wrap) close(); });
+  }
 
   /* ----------------------------------------------------------
      Navigation / rendering
