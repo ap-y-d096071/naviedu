@@ -38,54 +38,69 @@
     <div class="nabi-wrap">
       <svg class="nabi ${withFloat ? 'nabi-float' : ''}" width="${size}" height="${size}" viewBox="0 0 200 200" role="img" aria-label="나비 가이드 캐릭터">
         <defs>
-          <radialGradient id="wingG" cx="40%" cy="35%" r="75%">
-            <stop offset="0%" stop-color="#7bc0ff"/>
-            <stop offset="55%" stop-color="#2f9bff"/>
-            <stop offset="100%" stop-color="#0a6ed6"/>
+          <radialGradient id="wingG" cx="38%" cy="32%" r="78%">
+            <stop offset="0%" stop-color="#ffe3f0"/>
+            <stop offset="52%" stop-color="#ff8fc4"/>
+            <stop offset="100%" stop-color="#ff4f9e"/>
           </radialGradient>
-          <radialGradient id="bodyG" cx="38%" cy="30%" r="80%">
-            <stop offset="0%" stop-color="#bff3ec"/>
-            <stop offset="60%" stop-color="#5fd8c6"/>
-            <stop offset="100%" stop-color="#23b39c"/>
+          <radialGradient id="wingG2" cx="40%" cy="35%" r="80%">
+            <stop offset="0%" stop-color="#fff6c2"/>
+            <stop offset="55%" stop-color="#ffe35e"/>
+            <stop offset="100%" stop-color="#f4cf00"/>
+          </radialGradient>
+          <radialGradient id="bodyG" cx="40%" cy="28%" r="85%">
+            <stop offset="0%" stop-color="#fffae0"/>
+            <stop offset="58%" stop-color="#ffe35e"/>
+            <stop offset="100%" stop-color="#f4c700"/>
           </radialGradient>
           <radialGradient id="cheek" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#ff8fc4"/><stop offset="100%" stop-color="#ff6db2"/>
+            <stop offset="0%" stop-color="#ff9ecb"/><stop offset="100%" stop-color="#ff6db2"/>
           </radialGradient>
           <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0a6ed6" flood-opacity="0.28"/>
+            <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#ff4f9e" flood-opacity="0.30"/>
           </filter>
         </defs>
 
-        <!-- Left wings -->
+        <!-- Left wings (plump & rounded) -->
         <g class="nabi-wing-l" filter="url(#soft)">
-          <path d="M96 108 C 50 56, 8 60, 16 100 C 22 132, 64 132, 96 116 Z" fill="url(#wingG)"/>
-          <path d="M96 116 C 60 130, 22 150, 34 176 C 48 200, 86 162, 96 132 Z" fill="url(#wingG)"/>
-          <circle cx="46" cy="92" r="9" fill="#bfe2ff" opacity=".85"/>
-          <circle cx="58" cy="160" r="6" fill="#bfe2ff" opacity=".85"/>
+          <path d="M98 112 C 52 58, 10 64, 12 102 C 14 136, 60 138, 98 118 Z" fill="url(#wingG)"/>
+          <path d="M98 120 C 62 128, 26 148, 36 180 C 46 208, 94 170, 98 134 Z" fill="url(#wingG2)"/>
+          <circle cx="46" cy="92" r="11" fill="#fff" opacity=".75"/>
+          <circle cx="40" cy="106" r="6" fill="#fff" opacity=".6"/>
+          <path d="M58 162 c -4 -7 -13 -7 -13 1 c 0 6 8 10 13 14 c 5 -4 13 -8 13 -14 c 0 -8 -9 -8 -13 -1 z" fill="#ff6db2"/>
         </g>
         <!-- Right wings -->
         <g class="nabi-wing-r" filter="url(#soft)">
-          <path d="M104 108 C 150 56, 192 60, 184 100 C 178 132, 136 132, 104 116 Z" fill="url(#wingG)"/>
-          <path d="M104 116 C 140 130, 178 150, 166 176 C 152 200, 114 162, 104 132 Z" fill="url(#wingG)"/>
-          <circle cx="154" cy="92" r="9" fill="#bfe2ff" opacity=".85"/>
-          <circle cx="142" cy="160" r="6" fill="#bfe2ff" opacity=".85"/>
+          <path d="M102 112 C 148 58, 190 64, 188 102 C 186 136, 140 138, 102 118 Z" fill="url(#wingG)"/>
+          <path d="M102 120 C 138 128, 174 148, 164 180 C 154 208, 106 170, 102 134 Z" fill="url(#wingG2)"/>
+          <circle cx="154" cy="92" r="11" fill="#fff" opacity=".75"/>
+          <circle cx="160" cy="106" r="6" fill="#fff" opacity=".6"/>
+          <path d="M142 162 c -4 -7 -13 -7 -13 1 c 0 6 8 10 13 14 c 5 -4 13 -8 13 -14 c 0 -8 -9 -8 -13 -1 z" fill="#ff6db2"/>
         </g>
 
-        <!-- Body -->
-        <ellipse cx="100" cy="116" rx="26" ry="34" fill="url(#bodyG)" filter="url(#soft)"/>
-        <!-- Antennae -->
-        <path d="M90 86 C 84 64, 74 58, 70 48" stroke="#23b39c" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M110 86 C 116 64, 126 58, 130 48" stroke="#23b39c" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <circle cx="69" cy="46" r="6" fill="#138Bff"/>
-        <circle cx="131" cy="46" r="6" fill="#f4f000"/>
-        <!-- Face -->
-        <circle cx="90" cy="110" r="6.5" fill="#16384f"/>
-        <circle cx="110" cy="110" r="6.5" fill="#16384f"/>
-        <circle cx="92" cy="108" r="2.2" fill="#fff"/>
-        <circle cx="112" cy="108" r="2.2" fill="#fff"/>
-        <circle cx="80" cy="122" r="6" fill="url(#cheek)" opacity=".75"/>
-        <circle cx="120" cy="122" r="6" fill="url(#cheek)" opacity=".75"/>
-        <path d="M91 122 Q 100 132 109 122" stroke="#16384f" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+        <!-- Chubby body + big round head -->
+        <ellipse cx="100" cy="146" rx="15" ry="20" fill="url(#bodyG)" filter="url(#soft)"/>
+        <circle cx="100" cy="112" r="33" fill="url(#bodyG)" filter="url(#soft)"/>
+
+        <!-- Antennae with heart tips -->
+        <path d="M86 84 C 78 60, 66 54, 64 42" stroke="#f4c700" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M114 84 C 122 60, 134 54, 136 42" stroke="#f4c700" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M64 42 c -3 -5 -10 -5 -10 1 c 0 5 6 8 10 11 c 4 -3 10 -6 10 -11 c 0 -6 -7 -6 -10 -1 z" fill="#ff6db2"/>
+        <path d="M136 42 c -3 -5 -10 -5 -10 1 c 0 5 6 8 10 11 c 4 -3 10 -6 10 -11 c 0 -6 -7 -6 -10 -1 z" fill="#ff6db2"/>
+
+        <!-- Face : big sparkly eyes -->
+        <ellipse cx="88" cy="112" rx="8.5" ry="10.5" fill="#3a2230"/>
+        <ellipse cx="112" cy="112" rx="8.5" ry="10.5" fill="#3a2230"/>
+        <circle cx="91" cy="108" r="3.4" fill="#fff"/>
+        <circle cx="115" cy="108" r="3.4" fill="#fff"/>
+        <circle cx="85.5" cy="116" r="1.8" fill="#fff" opacity=".9"/>
+        <circle cx="109.5" cy="116" r="1.8" fill="#fff" opacity=".9"/>
+        <!-- Blush -->
+        <ellipse cx="76" cy="124" rx="8" ry="5.5" fill="url(#cheek)" opacity=".85"/>
+        <ellipse cx="124" cy="124" rx="8" ry="5.5" fill="url(#cheek)" opacity=".85"/>
+        <!-- Happy open smile -->
+        <path d="M92 126 Q 100 137 108 126 Q 100 132 92 126 Z" fill="#ff6db2"/>
+        <path d="M92 126 Q 100 137 108 126" stroke="#3a2230" stroke-width="3" fill="none" stroke-linecap="round"/>
       </svg>
     </div>`;
   }
