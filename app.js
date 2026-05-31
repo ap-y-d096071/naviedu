@@ -248,7 +248,7 @@
           <div class="ai-step"><i>🔑</i><span>질문에서 관심 키워드 추출</span><em>⏳</em></div>
           <div class="ai-step"><i>🏷️</i><span>진로 불안 유형 분류</span><em>⏳</em></div>
           <div class="ai-step"><i>📚</i><span>공공데이터 근거 검색 (RAG)</span><em>⏳</em></div>
-          <div class="ai-step"><i>🧮</i><span>역량 마스터리 계산</span><em>⏳</em></div>
+          <div class="ai-step"><i>🧮</i><span>미래 직업 생존력 분석</span><em>⏳</em></div>
           <div class="ai-step"><i>🃏</i><span>AI 진로 탐색 카드 생성</span><em>⏳</em></div>
         </div>
         <div class="ai-result" id="aiResult" hidden>
@@ -256,7 +256,7 @@
         </div>
         <div class="spacer"></div>
         <div class="cta-dock" id="aiDock" hidden>
-          <button class="btn btn--primary" data-next>🪜 이 고민으로 프로젝트 시작하기</button>
+          <button class="btn btn--primary" data-next>🧭 진로 안심 나침반 보기</button>
         </div>`,
       mount(el) {
         const steps = [...el.querySelectorAll('.ai-step')];
@@ -286,6 +286,44 @@
         };
         setTimeout(step, 420);
       }
+    },
+
+    /* 7.5 — 진로 안심 나침반 (미래 직업 생존력 오망성 그래프) ------------- */
+    {
+      render: () => {
+        const sc = survivalScores();
+        const total = Math.round(sc.reduce((a, s) => a + s.val, 0) / sc.length);
+        const grade = total >= 85 ? '아주 든든해요' : total >= 70 ? '안정적이에요' : '키워갈 여지가 많아요';
+        const sorted = [...sc].sort((a, b) => b.val - a.val);
+        const strong = sorted[0], grow = sorted[sorted.length - 1];
+        return `
+        <span class="eyebrow">STEP 7 · 진로 안심 나침반</span>
+        <h2 class="title">AI 시대의 막연한 불안을<br/><span class="hl">구체적인 준비</span>로 바꿔요 🧭</h2>
+        <p class="subtitle">워크넷·KNOW 데이터로 분석한 <b style="color:var(--ink)">미래 직업 생존력</b>이에요.</p>
+
+        <div class="cmp-card">
+          <div class="cmp-score">
+            <span class="cmp-score__k">미래 직업 생존력 스코어</span>
+            <span class="cmp-score__v">${total}<small>점</small></span>
+            <span class="cmp-score__g">${grade}</span>
+          </div>
+          ${radarChart(sc)}
+        </div>
+
+        <div class="cmp-legend">
+          ${sc.map(s => `<div class="cmp-leg"><span class="cmp-leg__dot"></span><div><b>${s.label} · ${s.val}</b><p>${s.desc}</p></div></div>`).join('')}
+        </div>
+
+        <div class="cmp-guide">
+          <h4>🧭 다음 항로 안내</h4>
+          <p>지금은 <b>${strong.label}</b>(이)가 가장 든든해요. AI 시대의 도착지(미래 직업)까지 안전하게 가려면, 다음 항로로 <b class="hl-pink">${grow.label}</b>(을)를 키워보세요. 나비가 한 걸음씩 길을 안내할게요.</p>
+        </div>
+        <div class="spacer"></div>
+        <div class="cta-dock">
+          <button class="btn btn--primary" data-next>🪜 이 고민으로 프로젝트 시작하기</button>
+        </div>`;
+      },
+      mount(el) { el.querySelector('.cmp-card').scrollTop = 0; }
     },
 
     /* 8 — 질문 사다리 프로젝트 보드 (사다리 오르기 게이미피케이션) --------- */
@@ -451,7 +489,7 @@
               ${svcTile('card','🃏','AI 진로 탐색 카드')}
               ${svcTile('ladder','🪜','질문 사다리 보드')}
               ${svcTile('portfolio','🦋','나비 궤적 포트폴리오')}
-              ${svcTile('immunity','🛡️','역량 마스터리')}
+              ${svcTile('immunity','🛡️','진로 안심 나침반')}
               ${svcTile(roleSvc().key, roleSvc().emoji, roleSvc().label)}
               ${svcTile('log','🔍','AI 리터러시 기록')}
             </div>
@@ -741,6 +779,48 @@
   function immBar(label, pct) {
     return `<div class="imm"><span class="imm__l">${label}</span><span class="imm__tr"><span class="imm__fl" data-pct="${pct}"></span></span><b>${pct}</b></div>`;
   }
+
+  /* 미래 직업 생존력 — 5축(오망성) 점수 + 설명 */
+  function survivalScores() {
+    const im = resolveDomain().immunity;          // {auto(=자동화 위험), scale, comp}
+    const stability = 100 - im.auto;
+    const clamp = v => Math.max(38, Math.min(98, Math.round(v)));
+    return [
+      { label:'자동화 안정성', val:clamp(stability),
+        desc:'AI·로봇이 쉽게 대체하기 어려운, 사람만의 판단·교감이 필요한 정도' },
+      { label:'미래 수요',     val:clamp(im.scale*0.55 + im.comp*0.35 + stability*0.10),
+        desc:'앞으로도 사회가 계속 필요로 할, 일자리 수요의 안정성' },
+      { label:'확장 가능성',   val:clamp(im.scale),
+        desc:'한 분야에 머물지 않고 다른 직무·산업으로 뻗어나갈 수 있는 잠재력' },
+      { label:'역량 성장성',   val:clamp(im.comp),
+        desc:'배우고 경험할수록 실력과 전문성이 계속 자랄 수 있는 여지' },
+      { label:'AI 협업력',     val:clamp(stability*0.4 + im.comp*0.5 + 12),
+        desc:'AI를 위협이 아닌 도구로 함께 써서 성과를 키우는 시너지' },
+    ];
+  }
+  function radarChart(scores) {
+    const cx = 150, cy = 126, R = 80, N = scores.length;
+    const ang = i => (-90 + i * (360 / N)) * Math.PI / 180;
+    const pt = (i, r) => [cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i))];
+    const poly = (r) => scores.map((_, i) => pt(i, r).map(n => n.toFixed(1)).join(',')).join(' ');
+    let grid = [0.25, 0.5, 0.75, 1].map(f => `<polygon points="${poly(R*f)}" fill="none" stroke="#dce5f0" stroke-width="1"/>`).join('');
+    let axes = scores.map((_, i) => { const [x, y] = pt(i, R); return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#dce5f0" stroke-width="1"/>`; }).join('');
+    const dpts = scores.map((s, i) => pt(i, R * s.val / 100).map(n => n.toFixed(1)).join(',')).join(' ');
+    let dots = scores.map((s, i) => { const [x, y] = pt(i, R * s.val / 100); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.6" fill="#138Bff" stroke="#fff" stroke-width="1.5"/>`; }).join('');
+    let labels = scores.map((s, i) => {
+      const [lx, ly] = pt(i, R + 16); const a = ang(i);
+      const anchor = Math.cos(a) > 0.25 ? 'start' : (Math.cos(a) < -0.25 ? 'end' : 'middle');
+      const dy = Math.sin(a) > 0.25 ? 11 : (Math.sin(a) < -0.25 ? -3 : 4);
+      return `<text x="${lx.toFixed(1)}" y="${(ly+dy).toFixed(1)}" text-anchor="${anchor}" font-size="11.5" font-weight="700" fill="#11314f">${s.label}</text>
+              <text x="${lx.toFixed(1)}" y="${(ly+dy+14).toFixed(1)}" text-anchor="${anchor}" font-size="11" font-weight="800" fill="#138Bff">${s.val}</text>`;
+    }).join('');
+    return `<svg class="radar" viewBox="0 0 300 252" role="img" aria-label="미래 직업 생존력 오망성 그래프">
+      <defs><radialGradient id="radarF" cx="50%" cy="45%" r="60%"><stop offset="0%" stop-color="#ff6db2" stop-opacity=".55"/><stop offset="100%" stop-color="#138Bff" stop-opacity=".45"/></radialGradient></defs>
+      ${grid}${axes}
+      <polygon points="${dpts}" fill="url(#radarF)" stroke="#138Bff" stroke-width="2.6" stroke-linejoin="round"/>
+      ${dots}${labels}
+    </svg>`;
+  }
   function careerCardHtml() {
     const { d, atype, adesc, summary } = careerData();
     const chip = (t, cls='') => `<span class="ai-chip ${cls}">${t}</span>`;
@@ -755,8 +835,8 @@
         <div class="ai-field"><h5>💼 관련 직업</h5><div class="ai-chips">${d.jobs.map(j=>chip(j,'pink')).join('')}</div></div>
       </div>
       <div class="ai-field"><h5>🌟 마스터리 역량</h5><div class="ai-chips">${d.skills.map(s=>chip(s,'yellow')).join('')}</div></div>
-      <div class="ai-field"><h5>🛡️ 역량 마스터리 <small>높을수록 AI 시대에 강해요</small></h5>
-        ${immBar('자동화 안정성', 100 - im.auto)}${immBar('확장 가능성', im.scale)}${immBar('역량 성장성', im.comp)}
+      <div class="ai-field"><h5>🧭 진로 안심 나침반 <small>미래 직업 생존력</small></h5>
+        <p>5가지 항목으로 본 <b style="color:var(--blue)">미래 직업 생존력 스코어 ${Math.round(survivalScores().reduce((a,s)=>a+s.val,0)/5)}점</b> · 다음 화면에서 오망성 그래프로 자세히 확인해요.</p>
       </div>
       <div class="ai-field"><h5>🏫 학교에서 할 활동</h5><p>${d.activity}</p></div>
       <div class="ai-field"><h5>✅ 오늘의 행동 3가지</h5><ul class="ai-todo">${d.actions.map(a=>`<li>${a}</li>`).join('')}</ul></div>
@@ -815,10 +895,12 @@
           kvTable(rows) + modalNote('결과물이 아니라 <b>질문·근거·실패·수정·성찰의 과정</b>을 기록하는 과정 중심 포트폴리오예요.') };
       }
       case 'immunity': {
-        const im = d.immunity;
-        return { title:'🛡️ 역량 마스터리', html:
-          `<p class="modal-lead"><b>${d.jobs[0]}</b> 기준 · AI 자동화 시대에 얼마나 강한 진로인지 점수화해요.</p>
-           <div class="imm-box">${immBar('자동화 안정성', 100-im.auto)}${immBar('확장 가능성', im.scale)}${immBar('역량 성장성', im.comp)}</div>
+        const sc = survivalScores();
+        const total = Math.round(sc.reduce((a, s) => a + s.val, 0) / sc.length);
+        return { title:'🧭 진로 안심 나침반', html:
+          `<p class="modal-lead"><b>${d.jobs[0]}</b> 기준 · 미래 직업 생존력 스코어 <b style="color:var(--blue)">${total}점</b></p>
+           <div class="cmp-card cmp-card--modal">${radarChart(sc)}</div>
+           <div class="cmp-legend">${sc.map(s => `<div class="cmp-leg"><span class="cmp-leg__dot"></span><div><b>${s.label} · ${s.val}</b><p>${s.desc}</p></div></div>`).join('')}</div>
            ${modalNote('워크넷 직업전망·KNOW 재직자조사 기반의 <b>설명 가능한 점수</b>로, 진로 불안을 구체적인 준비 방향으로 바꿔줘요.')}` };
       }
       case 'teacher':
