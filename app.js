@@ -33,97 +33,26 @@
   /* ----------------------------------------------------------
      Butterfly SVG — the volumetric "Nabi" guide
   ---------------------------------------------------------- */
-  /* Volumetric "Nabi" mascot — peach body, magenta+yellow wings, aubergine eyes.
-     pose: fly | wave | think | analyst | mentor | climb | celebrate            */
-  const LC = '#eeb588';     // limb / antenna peach
-  const EYE = '#3b2b49';    // aubergine eyes
-  function nabiWings(full) {
-    if (!full) {
-      return `
-      <g class="nabi-wing-l"><path d="M90 104 C 72 90 52 95 56 113 C 60 127 82 121 92 113 Z" fill="url(#nbW)"/><circle cx="67" cy="106" r="4.5" fill="url(#nbY)"/></g>
-      <g class="nabi-wing-r"><path d="M110 104 C 128 90 148 95 144 113 C 140 127 118 121 108 113 Z" fill="url(#nbW)"/><circle cx="133" cy="106" r="4.5" fill="url(#nbY)"/></g>`;
-    }
-    return `
-    <g class="nabi-wing-l" filter="url(#nbSoft)">
-      <path d="M94 98 C 58 50 12 54 12 94 C 12 124 58 124 96 104 Z" fill="url(#nbW)"/>
-      <path d="M96 110 C 62 122 24 148 38 178 C 50 202 92 162 96 128 Z" fill="url(#nbW)"/>
-      <path d="M68 86 C 50 66 30 72 32 92 C 34 108 56 104 70 96 Z" fill="url(#nbY)"/>
-      <circle cx="40" cy="100" r="7" fill="url(#nbY)"/>
-      <circle cx="52" cy="158" r="6" fill="url(#nbY)"/>
-    </g>
-    <g class="nabi-wing-r" filter="url(#nbSoft)">
-      <path d="M106 98 C 142 50 188 54 188 94 C 188 124 142 124 104 104 Z" fill="url(#nbW)"/>
-      <path d="M104 110 C 138 122 176 148 162 178 C 150 202 108 162 104 128 Z" fill="url(#nbW)"/>
-      <path d="M132 86 C 150 66 170 72 168 92 C 166 108 144 104 130 96 Z" fill="url(#nbY)"/>
-      <circle cx="160" cy="100" r="7" fill="url(#nbY)"/>
-      <circle cx="148" cy="158" r="6" fill="url(#nbY)"/>
-    </g>`;
-  }
+  /* Nabi mascot — uses the official illustrated SVG pose set in
+     assets/nabi_svg_individual/. Each pose maps to one ready-made file.       */
+  const NABI_DIR = 'assets/nabi_svg_individual/';
+  const NABI_FILES = {
+    fly:       'nabi_original_flying_high.svg',            // Flying — wings spread
+    wave:      'nabi_original_giving_a_thumbs_up.svg',     // raised-arm greeting (Wave Hello)
+    coach:     'nabi_original_giving_a_thumbs_up.svg',     // Friendly Coach
+    think:     'nabi_original_thinking_with_paw_to_chin.svg',
+    analyst:   'nabi_original_typing_on_laptop.svg',       // Data Analyzing (glasses + tablet)
+    mentor:    'nabi_original_reading_a_book.svg',         // Mentor (holding book)
+    climb:     'nabi_original_giving_a_thumbs_up.svg',     // Climbing Ladder (cheer at each rung)
+    celebrate: 'nabi_original_celebration_confetti.svg',   // Celebration
+    idea:      'nabi_original_idea_lightbulb.svg',
+    happy:     'nabi_original_basic_happy.svg',
+  };
   function nabi(size = 200, pose = 'fly', withFloat = true) {
-    const full = !['think', 'analyst', 'mentor'].includes(pose);
-    const arm = (d, hx, hy) => `<path d="${d}" stroke="${LC}" stroke-width="13" fill="none" stroke-linecap="round"/><circle cx="${hx}" cy="${hy}" r="8.5" fill="${LC}"/>`;
-    let arms;
-    if (pose === 'wave')           arms = arm('M83 117 Q 72 130 66 143', 66, 143) + arm('M117 112 Q 134 95 145 77', 145, 77);
-    else if (pose === 'celebrate') arms = arm('M83 112 Q 67 92 59 72', 59, 72) + arm('M117 112 Q 133 92 141 72', 141, 72);
-    else if (pose === 'climb')     arms = arm('M85 110 Q 80 90 84 73', 84, 73) + arm('M115 110 Q 120 90 116 73', 116, 73);
-    else if (pose === 'analyst' || pose === 'mentor') arms = arm('M84 118 Q 80 131 87 141', 87, 141) + arm('M116 118 Q 120 131 113 141', 113, 141);
-    else if (pose === 'think')     arms = arm('M82 118 Q 70 132 64 145', 64, 145) + arm('M116 116 Q 110 126 101 121', 99, 118);
-    else                           arms = arm('M82 116 Q 70 128 64 142', 64, 142) + arm('M118 116 Q 130 128 136 142', 136, 142);
-
-    const eyeShift = pose === 'think' ? -2 : 0;
-    let mouth;
-    if (pose === 'celebrate') mouth = `<path d="M90 92 Q 100 107 110 92 Q 100 100 90 92 Z" fill="#7a2b46"/><path d="M90 92 Q 100 107 110 92" stroke="${EYE}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-    else if (pose === 'think') mouth = `<path d="M95 96 Q 100 99 105 95" stroke="${EYE}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-    else mouth = `<path d="M91 93 Q 100 102 109 93" stroke="${EYE}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
-
-    let accHead = '', accFront = '', behind = '';
-    if (pose === 'analyst') {
-      accFront = `
-      <g><circle cx="88" cy="${83+eyeShift}" r="11" fill="rgba(255,255,255,.18)" stroke="#c2185b" stroke-width="3"/><circle cx="112" cy="${83+eyeShift}" r="11" fill="rgba(255,255,255,.18)" stroke="#c2185b" stroke-width="3"/><path d="M99 83 H101" stroke="#c2185b" stroke-width="3"/></g>
-      <g transform="rotate(-9 100 138)"><rect x="83" y="124" width="34" height="25" rx="4" fill="#54657a"/><rect x="86" y="127" width="28" height="19" rx="2" fill="#cfe7ff"/><circle cx="100" cy="139" r="6" fill="none" stroke="#138Bff" stroke-width="2"/></g>`;
-    } else if (pose === 'mentor') {
-      accHead = `<g transform="rotate(-6 100 48)"><rect x="80" y="42" width="40" height="8" rx="2" fill="#9c124e"/><polygon points="100,31 126,42 100,50 74,42" fill="#b81259"/><circle cx="100" cy="41" r="3" fill="#f4d000"/><path d="M100 41 L 121 45 L 121 58" stroke="#f4d000" stroke-width="2" fill="none"/><circle cx="121" cy="60" r="3.2" fill="#f4d000"/></g>`;
-      accFront = `<g><rect x="82" y="127" width="36" height="22" rx="3" fill="#8a1f3c"/><rect x="99" y="127" width="2" height="22" fill="#fff" opacity=".5"/><rect x="86" y="131" width="11" height="3" rx="1.5" fill="#fff" opacity=".7"/><rect x="103" y="131" width="11" height="3" rx="1.5" fill="#fff" opacity=".7"/></g>`;
-    }
-
-    let conf = '';
-    if (pose === 'celebrate') {
-      const cs = ['#138Bff', '#f4d000', '#ff6db2', '#23b39c'];
-      for (let i = 0; i < 9; i++) { const x = (22 + Math.random()*156)|0, y = (8 + Math.random()*56)|0; conf += `<rect x="${x}" y="${y}" width="7" height="4" rx="1" fill="${cs[i%4]}" transform="rotate(${(Math.random()*90)|0} ${x} ${y})"/>`; }
-    }
-
+    const file = NABI_FILES[pose] || NABI_FILES.fly;
     return `
-    <div class="nabi-wrap">
-      <svg class="nabi ${withFloat ? 'nabi-float' : ''}" width="${size}" height="${size}" viewBox="0 0 200 200" role="img" aria-label="나비 캐릭터">
-        <defs>
-          <radialGradient id="nbBody" cx="38%" cy="26%" r="84%"><stop offset="0%" stop-color="#ffe9d6"/><stop offset="55%" stop-color="#f6c39b"/><stop offset="100%" stop-color="#e3a06f"/></radialGradient>
-          <radialGradient id="nbW" cx="40%" cy="26%" r="90%"><stop offset="0%" stop-color="#ff86b4"/><stop offset="50%" stop-color="#e62e72"/><stop offset="100%" stop-color="#b3145a"/></radialGradient>
-          <radialGradient id="nbY" cx="40%" cy="32%" r="82%"><stop offset="0%" stop-color="#fff29c"/><stop offset="100%" stop-color="#f4d000"/></radialGradient>
-          <radialGradient id="nbCheek" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffa6c4"/><stop offset="100%" stop-color="#ff7fa8"/></radialGradient>
-          <filter id="nbSoft" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#c76a98" flood-opacity="0.26"/></filter>
-        </defs>
-        ${behind}
-        ${nabiWings(full)}
-        <path d="M91 150 L 89 168" stroke="${LC}" stroke-width="15" fill="none" stroke-linecap="round"/>
-        <path d="M109 150 L 111 168" stroke="${LC}" stroke-width="15" fill="none" stroke-linecap="round"/>
-        <ellipse cx="100" cy="120" rx="25" ry="29" fill="url(#nbBody)" filter="url(#nbSoft)"/>
-        <circle cx="100" cy="82" r="30" fill="url(#nbBody)" filter="url(#nbSoft)"/>
-        ${arms}
-        <path d="M89 56 C 83 38 71 33 65 25" stroke="${LC}" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M111 56 C 117 38 129 33 135 25" stroke="${LC}" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <circle cx="64" cy="24" r="6.5" fill="url(#nbW)"/>
-        <circle cx="136" cy="24" r="6.5" fill="url(#nbW)"/>
-        <ellipse cx="88" cy="${83+eyeShift}" rx="7.5" ry="9.5" fill="${EYE}"/>
-        <ellipse cx="112" cy="${83+eyeShift}" rx="7.5" ry="9.5" fill="${EYE}"/>
-        <circle cx="90.5" cy="${80+eyeShift}" r="2.6" fill="#fff"/>
-        <circle cx="114.5" cy="${80+eyeShift}" r="2.6" fill="#fff"/>
-        <ellipse cx="75" cy="92" rx="7" ry="4.5" fill="url(#nbCheek)" opacity=".9"/>
-        <ellipse cx="125" cy="92" rx="7" ry="4.5" fill="url(#nbCheek)" opacity=".9"/>
-        ${mouth}
-        ${accHead}
-        ${accFront}
-        ${conf}
-      </svg>
+    <div class="nabi-wrap" style="width:${size}px;height:${size}px">
+      <img class="nabi ${withFloat ? 'nabi-float' : ''}" src="${NABI_DIR}${file}" alt="나비 캐릭터" loading="lazy" draggable="false"/>
     </div>`;
   }
   function partnerPose() { return ({ coach:'wave', analyst:'analyst', mentor:'mentor' })[state.partner] || 'analyst'; }
@@ -154,7 +83,7 @@
       render: () => `
         ${deco()}
         <div class="spacer"></div>
-        ${nabi(212,'wave')}
+        ${nabi(220,'fly')}
         <div style="text-align:center">
           <span class="eyebrow" style="align-self:center">🧭 AI 진로 탐색 항해</span>
           <h1 class="title">반가워요! 저는 <span class="hl">나비</span>예요 🦋<br/>함께 진로를 항해해 볼까요?</h1>
@@ -206,7 +135,7 @@
           ${feature('🦋','나비 궤적 포트폴리오','질문·근거·성찰의 성장 과정을 차곡차곡 기록해요.')}
           ${feature('🏫','학교·지역 데이터','공공데이터로 진로를 학교 활동·지역 자원과 연결해요.')}
         </div>
-        <div class="nabi-wrap" style="margin-top:6px">${nabi(120)}</div>
+        <div style="margin-top:6px">${nabi(116,'idea')}</div>
         <div class="spacer"></div>
         <div class="cta-dock">
           <button class="btn btn--primary" data-next>좋아요, 계속할게요</button>

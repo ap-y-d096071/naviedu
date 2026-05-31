@@ -199,13 +199,13 @@ body {
   background: linear-gradient(rgba(255,255,255,0), var(--white) 35%);
 }
 
-/* ---------- Butterfly ---------- */
-.nabi { width: 100%; display: block; }
-.nabi-wrap { display: flex; justify-content: center; }
-@keyframes float { 0%,100% { transform: translateY(0) rotate(-1deg);} 50% { transform: translateY(-12px) rotate(1.5deg);} }
+/* ---------- Nabi mascot (illustrated SVG pose set) ---------- */
+.nabi-wrap { display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+.nabi { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block; user-select: none; }
+@keyframes float { 0%,100% { transform: translateY(0) rotate(-1deg);} 50% { transform: translateY(-10px) rotate(1deg);} }
 @keyframes flutterL { 0%,100%{transform:rotateY(0deg);} 50%{transform:rotateY(38deg);} }
 @keyframes flutterR { 0%,100%{transform:rotateY(0deg);} 50%{transform:rotateY(-38deg);} }
-.nabi-float { animation: float 4s var(--ease) infinite; transform-origin: center; }
+.nabi-float { animation: float 4.5s var(--ease) infinite; transform-origin: center; }
 .nabi-wing-l { transform-origin: 100px 110px; animation: flutterL 2.6s ease-in-out infinite; }
 .nabi-wing-r { transform-origin: 100px 110px; animation: flutterR 2.6s ease-in-out infinite; }
 

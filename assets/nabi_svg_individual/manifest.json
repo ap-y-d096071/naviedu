@@ -1,0 +1,324 @@
+[
+  {
+    "file": "nabi_original_basic_happy.svg",
+    "pose_name": "Basic Happy",
+    "source": "nabi_original",
+    "width": 376,
+    "height": 317
+  },
+  {
+    "file": "nabi_original_aww_sad.svg",
+    "pose_name": "Aww Sad",
+    "source": "nabi_original",
+    "width": 373,
+    "height": 328
+  },
+  {
+    "file": "nabi_original_angry_pout.svg",
+    "pose_name": "Angry Pout",
+    "source": "nabi_original",
+    "width": 373,
+    "height": 313
+  },
+  {
+    "file": "nabi_original_gasp_surprised.svg",
+    "pose_name": "Gasp Surprised",
+    "source": "nabi_original",
+    "width": 372,
+    "height": 328
+  },
+  {
+    "file": "nabi_original_wink.svg",
+    "pose_name": "Wink",
+    "source": "nabi_original",
+    "width": 375,
+    "height": 327
+  },
+  {
+    "file": "nabi_original_shy_blush.svg",
+    "pose_name": "Shy Blush",
+    "source": "nabi_original",
+    "width": 376,
+    "height": 333
+  },
+  {
+    "file": "nabi_original_contented_sigh.svg",
+    "pose_name": "Contented Sigh",
+    "source": "nabi_original",
+    "width": 374,
+    "height": 336
+  },
+  {
+    "file": "nabi_original_zzz_sleeping.svg",
+    "pose_name": "Zzz Sleeping",
+    "source": "nabi_original",
+    "width": 377,
+    "height": 370
+  },
+  {
+    "file": "nabi_original_mentor.svg",
+    "pose_name": "Mentor",
+    "source": "nabi_original",
+    "width": 399,
+    "height": 397
+  },
+  {
+    "file": "nabi_original_coach_with_whistle.svg",
+    "pose_name": "Coach with Whistle",
+    "source": "nabi_original",
+    "width": 295,
+    "height": 406
+  },
+  {
+    "file": "nabi_original_presentation_mode.svg",
+    "pose_name": "Presentation Mode",
+    "source": "nabi_original",
+    "width": 410,
+    "height": 327
+  },
+  {
+    "file": "nabi_original_writing_a_note.svg",
+    "pose_name": "Writing a Note",
+    "source": "nabi_original",
+    "width": 301,
+    "height": 343
+  },
+  {
+    "file": "nabi_original_typing_on_laptop.svg",
+    "pose_name": "Typing on Laptop",
+    "source": "nabi_original",
+    "width": 307,
+    "height": 348
+  },
+  {
+    "file": "nabi_original_reading_a_book.svg",
+    "pose_name": "Reading a Book",
+    "source": "nabi_original",
+    "width": 296,
+    "height": 353
+  },
+  {
+    "file": "nabi_original_celebration_confetti.svg",
+    "pose_name": "Celebration Confetti",
+    "source": "nabi_original",
+    "width": 275,
+    "height": 359
+  },
+  {
+    "file": "nabi_original_flying_high.svg",
+    "pose_name": "Flying High",
+    "source": "nabi_original",
+    "width": 353,
+    "height": 330
+  },
+  {
+    "file": "nabi_original_thinking_with_paw_to_chin.svg",
+    "pose_name": "Thinking with Paw to Chin",
+    "source": "nabi_original",
+    "width": 301,
+    "height": 329
+  },
+  {
+    "file": "nabi_original_smelling_a_flower.svg",
+    "pose_name": "Smelling a Flower",
+    "source": "nabi_original",
+    "width": 294,
+    "height": 289
+  },
+  {
+    "file": "nabi_original_idea_lightbulb.svg",
+    "pose_name": "Idea Lightbulb",
+    "source": "nabi_original",
+    "width": 327,
+    "height": 338
+  },
+  {
+    "file": "nabi_original_holding_coffee_cup.svg",
+    "pose_name": "Holding Coffee Cup",
+    "source": "nabi_original",
+    "width": 349,
+    "height": 327
+  },
+  {
+    "file": "nabi_original_waving_hello.svg",
+    "pose_name": "Waving Hello",
+    "source": "nabi_original",
+    "width": 191,
+    "height": 328
+  },
+  {
+    "file": "nabi_original_giving_a_thumbs_up.svg",
+    "pose_name": "Giving a Thumbs Up",
+    "source": "nabi_original",
+    "width": 306,
+    "height": 323
+  },
+  {
+    "file": "nabi_recolored_happy_smile.svg",
+    "pose_name": "Happy Smile",
+    "source": "nabi_recolored",
+    "width": 381,
+    "height": 349
+  },
+  {
+    "file": "nabi_recolored_playful_wink.svg",
+    "pose_name": "Playful Wink",
+    "source": "nabi_recolored",
+    "width": 335,
+    "height": 339
+  },
+  {
+    "file": "nabi_recolored_downcast_sad.svg",
+    "pose_name": "Downcast Sad",
+    "source": "nabi_recolored",
+    "width": 316,
+    "height": 333
+  },
+  {
+    "file": "nabi_recolored_surprised_gasp.svg",
+    "pose_name": "Surprised Gasp",
+    "source": "nabi_recolored",
+    "width": 316,
+    "height": 345
+  },
+  {
+    "file": "nabi_recolored_furious_angry.svg",
+    "pose_name": "Furious Angry",
+    "source": "nabi_recolored",
+    "width": 344,
+    "height": 336
+  },
+  {
+    "file": "nabi_recolored_closed_eye_sleep.svg",
+    "pose_name": "Closed Eye Sleep",
+    "source": "nabi_recolored",
+    "width": 305,
+    "height": 342
+  },
+  {
+    "file": "nabi_recolored_dynamic_flying.svg",
+    "pose_name": "Dynamic Flying",
+    "source": "nabi_recolored",
+    "width": 420,
+    "height": 296
+  },
+  {
+    "file": "nabi_recolored_sprinting_run.svg",
+    "pose_name": "Sprinting Run",
+    "source": "nabi_recolored",
+    "width": 342,
+    "height": 326
+  },
+  {
+    "file": "nabi_recolored_relaxed_sitting.svg",
+    "pose_name": "Relaxed Sitting",
+    "source": "nabi_recolored",
+    "width": 304,
+    "height": 369
+  },
+  {
+    "file": "nabi_recolored_zen_meditation.svg",
+    "pose_name": "Zen Meditation",
+    "source": "nabi_recolored",
+    "width": 311,
+    "height": 302
+  },
+  {
+    "file": "nabi_recolored_enthusiastic_wave.svg",
+    "pose_name": "Enthusiastic Wave",
+    "source": "nabi_recolored",
+    "width": 306,
+    "height": 316
+  },
+  {
+    "file": "nabi_recolored_polite_bowing.svg",
+    "pose_name": "Polite Bowing",
+    "source": "nabi_recolored",
+    "width": 314,
+    "height": 328
+  },
+  {
+    "file": "nabi_recolored_chef_nabi.svg",
+    "pose_name": "Chef Nabi",
+    "source": "nabi_recolored",
+    "width": 312,
+    "height": 382
+  },
+  {
+    "file": "nabi_recolored_artist_nabi.svg",
+    "pose_name": "Artist Nabi",
+    "source": "nabi_recolored",
+    "width": 316,
+    "height": 352
+  },
+  {
+    "file": "nabi_recolored_doctor_nabi.svg",
+    "pose_name": "Doctor Nabi",
+    "source": "nabi_recolored",
+    "width": 313,
+    "height": 359
+  },
+  {
+    "file": "nabi_recolored_engineer_nabi.svg",
+    "pose_name": "Engineer Nabi",
+    "source": "nabi_recolored",
+    "width": 313,
+    "height": 349
+  },
+  {
+    "file": "nabi_recolored_athlete_nabi.svg",
+    "pose_name": "Athlete Nabi",
+    "source": "nabi_recolored",
+    "width": 316,
+    "height": 361
+  },
+  {
+    "file": "nabi_recolored_gardener_nabi.svg",
+    "pose_name": "Gardener Nabi",
+    "source": "nabi_recolored",
+    "width": 320,
+    "height": 337
+  },
+  {
+    "file": "nabi_recolored_scientist_nabi.svg",
+    "pose_name": "Scientist Nabi",
+    "source": "nabi_recolored",
+    "width": 309,
+    "height": 359
+  },
+  {
+    "file": "nabi_recolored_librarian_nabi.svg",
+    "pose_name": "Librarian Nabi",
+    "source": "nabi_recolored",
+    "width": 330,
+    "height": 359
+  },
+  {
+    "file": "nabi_recolored_pilot_nabi.svg",
+    "pose_name": "Pilot Nabi",
+    "source": "nabi_recolored",
+    "width": 306,
+    "height": 333
+  },
+  {
+    "file": "nabi_recolored_astronaut_nabi.svg",
+    "pose_name": "Astronaut Nabi",
+    "source": "nabi_recolored",
+    "width": 359,
+    "height": 318
+  },
+  {
+    "file": "nabi_recolored_teacher_nabi.svg",
+    "pose_name": "Teacher Nabi",
+    "source": "nabi_recolored",
+    "width": 365,
+    "height": 355
+  },
+  {
+    "file": "nabi_recolored_firefighter_nabi.svg",
+    "pose_name": "Firefighter Nabi",
+    "source": "nabi_recolored",
+    "width": 302,
+    "height": 349
+  }
+]
