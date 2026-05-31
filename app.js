@@ -370,6 +370,72 @@
       }
     },
 
+    /* 8.5 — 나비 궤적 포트폴리오 (핵심 역량 가이드) -------------------- */
+    {
+      render: () => {
+        const COMP = [
+          { n:1, emoji:'🧩', ko:'비정형 문제 해결', en:'Unstructured Problem Solving',
+            point:"‘정답이 없는 상황에서 스스로 기준을 세워 문제를 해결한 경험’을 강조해요.",
+            ex:[
+              '학교 축제·체육대회 기획 중 예산 부족이나 갑작스러운 우천 같은 돌발 변수가 생겼을 때, 데이터를 모아 분석하고 합리적인 대안을 제시한 경험',
+              '실험이 매뉴얼대로 되지 않고 오류가 났을 때, 원인을 분석하고 변인을 통제해 새로운 실험 방식을 설계한 탐구 활동',
+            ]},
+          { n:2, emoji:'💡', ko:'창의·변혁적 사고', en:'Creative & Transformative Thinking',
+            point:"‘관행을 비판적으로 바라보고 작은 혁신을 만들어낸 경험’을 보여줘요.",
+            ex:[
+              '비효율적이던 학급 분리수거 시스템·도서 대출 방식을 새 아이디어로 개선해 시간 단축·참여율 증가 같은 실질 변화를 이끈 사례',
+              '수행평가·동아리 발표에서 뻔한 방식 대신 직접 제작한 영상·데이터 시각화 등 독창적 매체로 새로운 가치를 더한 경험',
+            ]},
+          { n:3, emoji:'🤝', ko:'사회적 공감 및 융합', en:'Social Intelligence & Transversal Skills',
+            point:"‘나와 다른 생각·관심사를 가진 사람과 소통해 시너지를 낸 경험’을 강조해요.",
+            ex:[
+              '문과·이과 학생이 융합한 팀 프로젝트에서 생긴 의견 충돌을 갈등이 아닌 다양한 관점의 교류로 승화시킨 경험',
+              '멘토링에서 단순 지식 전달을 넘어 상대의 어려움에 깊이 공감하고 함께 토론하며 해결책을 찾아간 상호작용',
+            ]},
+          { n:4, emoji:'🧭', ko:'주도적 커리어 적응', en:'Proactive Career Adaptability',
+            point:"진로 탐색 과정에서 발휘한 ‘메타인지’와 ‘자기주도 학습 능력’을 보여줘요.",
+            ex:[
+              '관심 분야 책·다큐를 본 뒤 무엇을 모르는지(메타인지) 스스로 파악해 K-MOOC 수강·코딩 독학 등으로 관심사를 확장한 과정',
+              '희망 전공 관련 사회 이슈가 바뀌자 진로 계획을 유연하게 수정하고 새로운 분야의 독서·활동을 추가 기획한 유연성',
+            ]},
+          { n:5, emoji:'🤖', ko:'증강 도구 활용', en:'Augmented Tool Proficiency',
+            point:"올바른 ‘AI 리터러시’로 기술을 윤리적·효과적으로 활용한 경험을 제시해요.",
+            ex:[
+              '보고서를 쓸 때 AI에게 대신 쓰게 한 것이 아니라 브레인스토밍·논문 요약·번역 등 사고를 확장하는 도구로 활용해 결과물의 퀄리티를 높인 탐구',
+              'AI 생성 툴의 한계(할루시네이션·편향성)를 인지하고 비판적으로 교차 검증하며 도출한 결과물',
+            ]},
+        ];
+        return `
+        <span class="eyebrow">STEP 8 · 나비 궤적 포트폴리오</span>
+        <h2 class="title">변화하는 시대에 <span class="hl">스스로 자라는</span><br/>나만의 성장 스토리를 기록해요 🦋</h2>
+        <p class="subtitle">추상적인 미래 역량을, 고등학생의 <b style="color:var(--ink)">학교생활 경험</b>으로 풀어낸 포트폴리오 가이드예요.</p>
+        <div class="comp-list">
+          ${COMP.map((c, i) => `
+            <div class="comp ${i === 0 ? 'is-open' : ''}" data-i="${i}">
+              <button class="comp__head" type="button">
+                <span class="comp__no">${c.emoji}</span>
+                <span class="comp__t"><b>${c.n}. ${c.ko}</b><em>${c.en}</em></span>
+                <span class="comp__ca">⌄</span>
+              </button>
+              <div class="comp__body">
+                <div class="comp__point"><span>📌 포트폴리오 적용 포인트</span><p>${c.point}</p></div>
+                <div class="comp__ex"><span>🏫 학교생활 예시</span><ul>${c.ex.map(e => `<li>${e}</li>`).join('')}</ul></div>
+              </div>
+            </div>`).join('')}
+        </div>
+        <div class="spacer"></div>
+        <div class="cta-dock">
+          <button class="btn btn--primary" data-next>✨ 거의 다 왔어요!</button>
+        </div>`;
+      },
+      mount(el) {
+        el.querySelectorAll('.comp__head').forEach(h => h.addEventListener('click', () => {
+          const card = h.closest('.comp');
+          card.classList.toggle('is-open');
+        }));
+      }
+    },
+
     /* 9 — Milestone celebration (badge) --------------------------- */
     {
       render: () => `
