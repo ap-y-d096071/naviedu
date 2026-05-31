@@ -44,9 +44,23 @@
     analyst:   'nabi_original_typing_on_laptop.svg',       // Data Analyzing (glasses + tablet)
     mentor:    'nabi_original_reading_a_book.svg',         // Mentor (holding book)
     climb:     'nabi_original_giving_a_thumbs_up.svg',     // Climbing Ladder (cheer at each rung)
-    celebrate: 'nabi_original_celebration_confetti.svg',   // Celebration
+    celebrate: 'nabi_recolored_playful_wink.svg',          // Celebration → playful wink
     idea:      'nabi_original_idea_lightbulb.svg',
     happy:     'nabi_original_basic_happy.svg',
+    cheer:     'nabi_recolored_enthusiastic_wave.svg',     // hub greeting
+    // role personas
+    student:   'nabi_student_role.svg',
+    teacher:   'nabi_teacher_role.svg',
+    parent:    'nabi_parent_role.svg',
+    // job characters (활동 갤러리 / 직업 연결)
+    chef:      'nabi_recolored_chef_nabi.svg',
+    artist:    'nabi_recolored_artist_nabi.svg',
+    scientist: 'nabi_recolored_scientist_nabi.svg',
+    gardener:  'nabi_recolored_gardener_nabi.svg',
+    librarian: 'nabi_recolored_librarian_nabi.svg',
+    astronaut: 'nabi_recolored_astronaut_nabi.svg',
+    doctor:    'nabi_recolored_doctor_nabi.svg',
+    engineer:  'nabi_recolored_engineer_nabi.svg',
   };
   function nabi(size = 200, pose = 'fly', withFloat = true) {
     const file = NABI_FILES[pose] || NABI_FILES.fly;
@@ -86,12 +100,12 @@
         ${nabi(220,'fly')}
         <div style="text-align:center">
           <span class="eyebrow" style="align-self:center">🧭 AI 진로 탐색 항해</span>
-          <h1 class="title">반가워요! 저는 <span class="hl">나비</span>예요 🦋<br/>함께 진로를 항해해 볼까요?</h1>
-          <p class="subtitle">카드를 고르고, 드래그하고, 던지면서<br/>나만의 진로 나침반을 만들어요.</p>
+          <h1 class="title">반가워요! 저는 <span class="hl">나비</span>예요 🦋<br/>함께 진로를 탐색해 볼까요?</h1>
+          <p class="subtitle">궁금했던 것을 마음껏 알아보며<br/>나만의 진로 나침반을 만들어요.</p>
         </div>
         <div class="spacer"></div>
         <div class="cta-dock">
-          <button class="btn btn--primary" data-next>✨ 항해 시작하기</button>
+          <button class="btn btn--primary" data-next>✨ 탐색 시작하기</button>
         </div>`
     },
 
@@ -102,9 +116,9 @@
         <h2 class="title">당신은 누구인가요?</h2>
         <p class="subtitle">역할에 맞춰 <span style="color:var(--blue);font-weight:700">맞춤형 경험</span>을 준비할게요.</p>
         <div class="card-list" id="roleList">
-          ${roleCard('student','🎒','학생','나의 진로와 적성을 탐색해요')}
-          ${roleCard('teacher','🧑‍🏫','교사','학생들의 항해를 안내해요')}
-          ${roleCard('parent','👨‍👩‍👧','학부모','아이의 성장을 함께 응원해요')}
+          ${partnerCard('student','student','학생','나의 진로와 적성을 탐색해요')}
+          ${partnerCard('teacher','teacher','교사','학생들의 역량을 키워줘요')}
+          ${partnerCard('parent','parent','학부모','아이의 성장을 함께 응원해요')}
         </div>
         <div class="spacer"></div>
         <div class="cta-dock">
@@ -234,7 +248,7 @@
           <div class="ai-step"><i>🔑</i><span>질문에서 관심 키워드 추출</span><em>⏳</em></div>
           <div class="ai-step"><i>🏷️</i><span>진로 불안 유형 분류</span><em>⏳</em></div>
           <div class="ai-step"><i>📚</i><span>공공데이터 근거 검색 (RAG)</span><em>⏳</em></div>
-          <div class="ai-step"><i>🧮</i><span>트렌드 면역 점수 계산</span><em>⏳</em></div>
+          <div class="ai-step"><i>🧮</i><span>역량 마스터리 계산</span><em>⏳</em></div>
           <div class="ai-step"><i>🃏</i><span>AI 진로 탐색 카드 생성</span><em>⏳</em></div>
         </div>
         <div class="ai-result" id="aiResult" hidden>
@@ -358,9 +372,16 @@
           ${recs.map(r => barRow(r.label, r.pct, r.color)).join('')}
           <div class="insight">💡 <b>${recs[0].label}</b> 적합도가 가장 높아요! 교육청 대시보드에서는 이 데이터가 지역별 진로교육 수요로 모여요. <span style="color:var(--ink-soft)">출처 · 대학알리미, 워크넷 (공공데이터포털)</span></div>
         </div>
+        <div class="job-strip">
+          <h4 class="job-strip__h">💼 이런 직업으로 이어질 수 있어요</h4>
+          <div class="job-strip__row">
+            ${[['scientist','연구원'],['artist','디자이너'],['engineer','엔지니어'],['doctor','의료인'],['chef','셰프']]
+              .map(([j,l]) => `<div class="job-chip">${nabi(70, j)}<span>${l}</span></div>`).join('')}
+          </div>
+        </div>
         <div class="spacer"></div>
         <div class="cta-dock">
-          <button class="btn btn--primary" data-next>🚀 나의 항해 시작하기</button>
+          <button class="btn btn--primary" data-next>🗺️ 우리 지역 맞춤 활동 보기</button>
         </div>`;
       },
       mount(el) {
@@ -368,11 +389,45 @@
       }
     },
 
-    /* 9 — Retention hub ------------------------------------------- */
+    /* 10 — 학교·지역 데이터 · 맞춤 체험 활동 (이미지 갤러리) ----------- */
+    {
+      render: () => {
+        const acts = [
+          ['scientist', '과학관 탐구 체험', 'OO과학관 주말 실험교실'],
+          ['artist',    '미술관 창작 워크숍', 'OO미술관 드로잉 클래스'],
+          ['chef',      '푸드 체험단',       '지역 로컬푸드 요리 체험'],
+          ['gardener',  '환경·봉사 활동',     '도시농업·환경 캠페인'],
+          ['librarian', '박물관·도서관 탐방',  '지역 역사 탐방 코스'],
+          ['astronaut', '진로 탐색 캠프',     '여름 진로 체험 캠프'],
+        ];
+        return `
+        <span class="eyebrow">STEP 9 · 학교·지역 데이터</span>
+        <h2 class="title">내 진로 카드에 맞춘<br/><span class="hl">우리 지역 체험 활동</span> 🗺️</h2>
+        <p class="subtitle">AI 진로 카드와 연결되는 활동을 추천해요. <span style="color:var(--ink-soft)">(MVP 가상 예시)</span></p>
+        <div class="act-grid">
+          ${acts.map(([j, name, tag]) => `
+            <div class="act-card">
+              <div class="act-card__img">${nabi(96, j, false)}</div>
+              <div class="act-card__b"><h4>${name}</h4><p>${tag}</p></div>
+            </div>`).join('')}
+        </div>
+        <div class="spacer"></div>
+        <div class="cta-dock">
+          <button class="btn btn--primary" data-next>🚀 나의 항해 본부로</button>
+        </div>`;
+      }
+    },
+
+    /* 11 — Retention hub ------------------------------------------- */
     {
       render: () => `
-        <span class="eyebrow">🏠 나의 항해 본부</span>
-        <h2 class="title">매일 들러서<br/><span class="hl-pink">진로 나침반</span>을 채워요</h2>
+        <div class="hub-hero">
+          <div class="hub-hero__t">
+            <span class="eyebrow">🏠 나의 항해 본부</span>
+            <h2 class="title">매일 들러서<br/><span class="hl-pink">진로 나침반</span>을 채워요</h2>
+          </div>
+          ${nabi(92,'cheer')}
+        </div>
         <div class="hub-grid">
           <div class="hub-card">
             <div class="hub-card__k">🔥 연속 출석</div>
@@ -396,9 +451,9 @@
               ${svcTile('card','🃏','AI 진로 탐색 카드')}
               ${svcTile('ladder','🪜','질문 사다리 보드')}
               ${svcTile('portfolio','🦋','나비 궤적 포트폴리오')}
-              ${svcTile('immunity','🛡️','트렌드 면역 점수')}
+              ${svcTile('immunity','🛡️','역량 마스터리')}
               ${svcTile(roleSvc().key, roleSvc().emoji, roleSvc().label)}
-              ${svcTile('log','🔍','AI 사용 투명성 로그')}
+              ${svcTile('log','🔍','AI 리터러시 기록')}
             </div>
           </div>
 
@@ -700,7 +755,7 @@
         <div class="ai-field"><h5>💼 관련 직업</h5><div class="ai-chips">${d.jobs.map(j=>chip(j,'pink')).join('')}</div></div>
       </div>
       <div class="ai-field"><h5>🌟 마스터리 역량</h5><div class="ai-chips">${d.skills.map(s=>chip(s,'yellow')).join('')}</div></div>
-      <div class="ai-field"><h5>🛡️ 트렌드 면역 점수 <small>높을수록 AI 시대에 강해요</small></h5>
+      <div class="ai-field"><h5>🛡️ 역량 마스터리 <small>높을수록 AI 시대에 강해요</small></h5>
         ${immBar('자동화 안정성', 100 - im.auto)}${immBar('확장 가능성', im.scale)}${immBar('역량 성장성', im.comp)}
       </div>
       <div class="ai-field"><h5>🏫 학교에서 할 활동</h5><p>${d.activity}</p></div>
@@ -761,7 +816,7 @@
       }
       case 'immunity': {
         const im = d.immunity;
-        return { title:'🛡️ 트렌드 면역 점수', html:
+        return { title:'🛡️ 역량 마스터리', html:
           `<p class="modal-lead"><b>${d.jobs[0]}</b> 기준 · AI 자동화 시대에 얼마나 강한 진로인지 점수화해요.</p>
            <div class="imm-box">${immBar('자동화 안정성', 100-im.auto)}${immBar('확장 가능성', im.scale)}${immBar('역량 성장성', im.comp)}</div>
            ${modalNote('워크넷 직업전망·KNOW 재직자조사 기반의 <b>설명 가능한 점수</b>로, 진로 불안을 구체적인 준비 방향으로 바꿔줘요.')}` };
@@ -795,7 +850,7 @@
             ['무기력', '오늘 10분 안에 할 수 있는 가장 작은 행동은?'],
           ]) + modalNote('심리 진단이 아니라 <b>학습 회복 지원</b>이에요. 위험 신호가 감지되면 교사·상담교사·전문기관 연계로 전환해요.') };
       case 'log':
-        return { title:'🔍 AI 사용 투명성 로그', html:
+        return { title:'🔍 AI 리터러시 기록', html:
           kvTable([
             ['사용한 AI', 'ChatGPT, Gemini, NotebookLM'],
             ['사용 목적', '자료 요약, 질문 생성, 글 피드백'],

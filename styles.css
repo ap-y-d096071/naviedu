@@ -383,6 +383,33 @@ body {
 }
 .insight b { color: var(--blue-deep); }
 
+/* ---------- Job character strip (data guide) ---------- */
+.job-strip { margin-top: 16px; }
+.job-strip__h { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.job-strip__row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.job-chip {
+  flex: none; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  background: linear-gradient(180deg, #fff, var(--sky));
+  border: 2px solid var(--gray); border-radius: 16px; padding: 8px 8px 6px;
+}
+.job-chip span { font-size: 11px; font-weight: 700; color: var(--ink-soft); }
+
+/* ---------- Activity gallery (학교·지역 데이터) ---------- */
+.act-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.act-card {
+  background: var(--white); border: 2px solid var(--gray); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow-sm); transition: transform .15s var(--ease), box-shadow .2s;
+}
+.act-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.act-card__img { background: linear-gradient(180deg, #fff, var(--sky)); display: flex; align-items: center; justify-content: center; padding: 8px 8px 4px; }
+.act-card__b { padding: 9px 12px 12px; }
+.act-card__b h4 { font-size: 13px; font-weight: 700; line-height: 1.3; }
+.act-card__b p { font-size: 11px; color: var(--ink-soft); margin-top: 3px; line-height: 1.4; }
+
+/* ---------- Hub hero (cheer mascot) ---------- */
+.hub-hero { display: flex; align-items: center; gap: 6px; }
+.hub-hero__t { flex: 1; }
+
 /* ---------- Retention hub ---------- */
 .hub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
 .hub-card {
